@@ -1,0 +1,625 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{5814DD84-1D8D-4391-81EB-2D191F731F1B}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>ReadCode</RootNamespace>
+    <AssemblyName>ReadCode</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>RTC-LOGO.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AYNETTEK.UHFReader, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\AYNETTEK.UHFReader.dll</HintPath>
+    </Reference>
+    <Reference Include="Bunifu_UI_v1.5.3, Version=1.5.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\Bunifu_UI_v1.5.3.dll</HintPath>
+    </Reference>
+    <Reference Include="DatabaseInterface_MMCV, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\DatabaseInterface_MMCV.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Charts.v20.2.Core, Version=20.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Data.Desktop.v20.2, Version=20.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Data.v20.2, Version=20.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Printing.v20.2.Core, Version=20.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Utils.v20.2, Version=20.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.Utils.v20.2.UI, Version=20.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.XtraBars.v20.2, Version=20.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraCharts.v20.2, Version=20.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.XtraCharts.v20.2.UI, Version=20.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraCharts.v20.2.Wizard, Version=20.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.XtraEditors.v20.2, Version=20.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.XtraGrid.v20.2, Version=20.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraLayout.v20.2, Version=20.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="DevExpress.XtraPrinting.v20.2, Version=20.2.3.0, Culture=neutral, PublicKeyToken=b88d1754d700e49a" />
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="GemBox.Spreadsheet, Version=45.0.35.1069, Culture=neutral, PublicKeyToken=b1b72c69714d4847, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\GemBox.Spreadsheet.dll</HintPath>
+    </Reference>
+    <Reference Include="Gma.System.MouseKeyHook, Version=5.6.130.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\Gma.System.MouseKeyHook.dll</HintPath>
+    </Reference>
+    <Reference Include="halcondotnet, Version=20.11.3.0, Culture=neutral, PublicKeyToken=4973bed59ddbf2b8, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\1112. Halcon\bin\dotnet35\halcondotnet.dll</HintPath>
+    </Reference>
+    <Reference Include="hdevenginedotnet, Version=20.11.3.0, Culture=neutral, PublicKeyToken=4973bed59ddbf2b8, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\1112. Halcon\bin\dotnet35\hdevenginedotnet.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=2.0.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.15\lib\net45\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="MC_PROTOCOL, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\MC_PROTOCOL.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>bin\Debug\Microsoft.Office.Interop.Excel.dll</HintPath>
+    </Reference>
+    <Reference Include="RTCLicense, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\RTCLicense.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.SQLite, Version=1.0.117.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.117.0\lib\net46\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SQLite.EF6, Version=1.0.117.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.EF6.1.0.117.0\lib\net46\System.Data.SQLite.EF6.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SQLite.Linq, Version=1.0.117.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.Linq.1.0.117.0\lib\net46\System.Data.SQLite.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Design" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WaitWnd, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\WaitWnd.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Classes\CamBarcode.cs" />
+    <Compile Include="Classes\Combobox.cs" />
+    <Compile Include="Classes\Const.cs" />
+    <Compile Include="Classes\c_varGolbal.cs" />
+    <Compile Include="Classes\GlobVar.cs" />
+    <Compile Include="Classes\Lib.cs" />
+    <Compile Include="Classes\SettingPLC.cs" />
+    <Compile Include="Classes\SupportDB_MMCV.cs" />
+    <Compile Include="Classes\SupportExcel.cs" />
+    <Compile Include="Classes\Support_SQL.cs" />
+    <Compile Include="Classes\Support_SQL_PVI_Server.cs" />
+    <Compile Include="Classes\WorkerThread2D.cs" />
+    <Compile Include="Classes\WorkerThreadAwaitVC3000.cs" />
+    <Compile Include="Forms\Connect\IOController.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Connect\IOController.designer.cs">
+      <DependentUpon>IOController.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Connect\Main.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Connect\Main.designer.cs">
+      <DependentUpon>Main.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmCreateProgram.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmCreateProgram.Designer.cs">
+      <DependentUpon>frmCreateProgram.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmCreateProgram_New.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmCreateProgram_New.Designer.cs">
+      <DependentUpon>frmCreateProgram_New.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmSetting_PLC.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmSetting_PLC.Designer.cs">
+      <DependentUpon>frmSetting_PLC.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frm_change_password.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frm_change_password.designer.cs">
+      <DependentUpon>frm_change_password.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frm_Data.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frm_Data.Designer.cs">
+      <DependentUpon>frm_Data.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frm_Login.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frm_Login.designer.cs">
+      <DependentUpon>frm_Login.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frm_Main.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frm_Main.Designer.cs">
+      <DependentUpon>frm_Main.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frm_SettingCamBarcode.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frm_SettingCamBarcode.designer.cs">
+      <DependentUpon>frm_SettingCamBarcode.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frm_SettingReadCode.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frm_SettingReadCode.Designer.cs">
+      <DependentUpon>frm_SettingReadCode.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frm_ShowDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frm_ShowDialog.designer.cs">
+      <DependentUpon>frm_ShowDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="src\IOControlSDK.cs" />
+    <Compile Include="src\MyTool.cs" />
+    <Compile Include="ucControl\ucViewImage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ucControl\ucViewImage.designer.cs">
+      <DependentUpon>ucViewImage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ucControl\uc_BarcodeVision.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ucControl\uc_BarcodeVision.designer.cs">
+      <DependentUpon>uc_BarcodeVision.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ucControl\uc_Vision.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ucControl\uc_Vision.designer.cs">
+      <DependentUpon>uc_Vision.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Forms\Connect\IOController.en.resx">
+      <DependentUpon>IOController.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Connect\IOController.resx">
+      <DependentUpon>IOController.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Connect\Main.resx">
+      <DependentUpon>Main.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmCreateProgram.resx">
+      <DependentUpon>frmCreateProgram.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmCreateProgram_New.resx">
+      <DependentUpon>frmCreateProgram_New.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmSetting_PLC.resx">
+      <DependentUpon>frmSetting_PLC.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frm_change_password.resx">
+      <DependentUpon>frm_change_password.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frm_Data.resx">
+      <DependentUpon>frm_Data.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frm_Login.resx">
+      <DependentUpon>frm_Login.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frm_Main.resx">
+      <DependentUpon>frm_Main.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frm_SettingCamBarcode.resx">
+      <DependentUpon>frm_SettingCamBarcode.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frm_SettingReadCode.resx">
+      <DependentUpon>frm_SettingReadCode.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frm_ShowDialog.resx">
+      <DependentUpon>frm_ShowDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\licenses.licx" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="ucControl\uc_BarcodeVision.resx">
+      <DependentUpon>uc_BarcodeVision.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ucControl\uc_Vision.resx">
+      <DependentUpon>uc_Vision.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="bin\Debug\app.config" />
+    <None Include="bin\Debug\big5.nlp" />
+    <None Include="bin\Debug\bopomofo.nlp" />
+    <None Include="bin\Debug\DB\DB_ReadCode.db" />
+    <None Include="bin\Debug\ksc.nlp" />
+    <None Include="bin\Debug\log4net.config" />
+    <None Include="bin\Debug\log\AppLog_20221229.log" />
+    <None Include="bin\Debug\log\AppLog_20221230.log" />
+    <None Include="bin\Debug\log\AppLog_20230103.log" />
+    <None Include="bin\Debug\log\AppLog_20230104.log" />
+    <None Include="bin\Debug\log\AppLog_20230105.log" />
+    <None Include="bin\Debug\log\AppLog_20230106.log" />
+    <None Include="bin\Debug\log\AppLog_20230131.log" />
+    <None Include="bin\Debug\log\AppLog_20230201.log" />
+    <None Include="bin\Debug\log\AppLog_20230202.log" />
+    <None Include="bin\Debug\log\AppLog_20230206.log" />
+    <None Include="bin\Debug\log\AppLog_20230207.log" />
+    <None Include="bin\Debug\log\AppLog_20230208.log" />
+    <None Include="bin\Debug\log\AppLog_20230209.log" />
+    <None Include="bin\Debug\log\AppLog_20230210.log" />
+    <None Include="bin\Debug\log\AppLog_20230211.log" />
+    <None Include="bin\Debug\log\AppLog_20230212.log" />
+    <None Include="bin\Debug\log\AppLog_20230215.log" />
+    <None Include="bin\Debug\MVFGSdkLog\MVFGCxp_00.log" />
+    <None Include="bin\Debug\MvIOInterfaceBox.lib" />
+    <None Include="bin\Debug\normidna.nlp" />
+    <None Include="bin\Debug\normnfc.nlp" />
+    <None Include="bin\Debug\normnfd.nlp" />
+    <None Include="bin\Debug\normnfkc.nlp" />
+    <None Include="bin\Debug\normnfkd.nlp" />
+    <None Include="bin\Debug\prc.nlp" />
+    <None Include="bin\Debug\prcp.nlp" />
+    <None Include="bin\Debug\ReadCode.exe.config" />
+    <None Include="bin\Debug\sortkey.nlp" />
+    <None Include="bin\Debug\sorttbls.nlp" />
+    <None Include="bin\Debug\TrainFile\1_aaa.dcm" />
+    <None Include="bin\Debug\TrainFile\1_barcode.dcm" />
+    <None Include="bin\Debug\TrainFile\1_bbb.dcm" />
+    <None Include="bin\Debug\TrainFile\2_123.dcm" />
+    <None Include="bin\Debug\TrainFile\2_aaa.dcm" />
+    <None Include="bin\Debug\TrainFile\2_Barcode.dcm" />
+    <None Include="bin\Debug\TrainFile\2_wer.dcm" />
+    <None Include="bin\Debug\TrainFile\4_tesst.dcm" />
+    <None Include="bin\Debug\Win64\MvIOInterfaceBox.lib" />
+    <None Include="bin\Debug\WinIo32.sys" />
+    <None Include="bin\Debug\WinIo64.sys" />
+    <None Include="bin\Debug\xjis.nlp" />
+    <None Include="log4net.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.7.2 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="RTC-LOGO.ico" />
+    <None Include="Images\icons8-light-off-16.png" />
+    <None Include="Images\icons8-light-off-24.png" />
+    <None Include="Images\icons8-light-on-16.png" />
+    <None Include="Images\icons8-light-on-24.png" />
+    <Content Include="bin\Debug\AYNETTEK.UHFReader.dll" />
+    <Content Include="bin\Debug\Bunifu_UI_v1.5.3.dll" />
+    <Content Include="bin\Debug\Config.xml" />
+    <Content Include="bin\Debug\DatabaseInterface_MMCV.dll" />
+    <Content Include="bin\Debug\DevExpress.Charts.v20.2.Core.dll" />
+    <Content Include="bin\Debug\DevExpress.CodeParser.v20.2.dll" />
+    <Content Include="bin\Debug\DevExpress.Data.Desktop.v20.2.dll" />
+    <Content Include="bin\Debug\DevExpress.Data.v20.2.dll" />
+    <Content Include="bin\Debug\DevExpress.DataAccess.v20.2.dll" />
+    <Content Include="bin\Debug\DevExpress.DataAccess.v20.2.xml" />
+    <Content Include="bin\Debug\DevExpress.DataVisualization.v20.2.Core.dll" />
+    <Content Include="bin\Debug\DevExpress.Images.v20.2.dll" />
+    <Content Include="bin\Debug\DevExpress.Office.v20.2.Core.dll" />
+    <Content Include="bin\Debug\DevExpress.Office.v20.2.Core.xml" />
+    <Content Include="bin\Debug\DevExpress.Pdf.v20.2.Core.dll" />
+    <Content Include="bin\Debug\DevExpress.Pdf.v20.2.Core.xml" />
+    <Content Include="bin\Debug\DevExpress.Pdf.v20.2.Drawing.dll" />
+    <Content Include="bin\Debug\DevExpress.Pdf.v20.2.Drawing.xml" />
+    <Content Include="bin\Debug\DevExpress.Printing.v20.2.Core.dll" />
+    <Content Include="bin\Debug\DevExpress.RichEdit.v20.2.Core.dll" />
+    <Content Include="bin\Debug\DevExpress.RichEdit.v20.2.Core.xml" />
+    <Content Include="bin\Debug\DevExpress.Sparkline.v20.2.Core.dll" />
+    <Content Include="bin\Debug\DevExpress.Sparkline.v20.2.Core.xml" />
+    <Content Include="bin\Debug\DevExpress.Utils.v20.2.dll" />
+    <Content Include="bin\Debug\DevExpress.Utils.v20.2.UI.dll" />
+    <Content Include="bin\Debug\DevExpress.Xpo.v20.2.dll" />
+    <Content Include="bin\Debug\DevExpress.Xpo.v20.2.xml" />
+    <Content Include="bin\Debug\DevExpress.XtraBars.v20.2.dll" />
+    <Content Include="bin\Debug\DevExpress.XtraCharts.v20.2.dll" />
+    <Content Include="bin\Debug\DevExpress.XtraCharts.v20.2.UI.dll" />
+    <Content Include="bin\Debug\DevExpress.XtraCharts.v20.2.Wizard.dll" />
+    <Content Include="bin\Debug\DevExpress.XtraEditors.v20.2.dll" />
+    <Content Include="bin\Debug\DevExpress.XtraGrid.v20.2.dll" />
+    <Content Include="bin\Debug\DevExpress.XtraLayout.v20.2.dll" />
+    <Content Include="bin\Debug\DevExpress.XtraNavBar.v20.2.dll" />
+    <Content Include="bin\Debug\DevExpress.XtraNavBar.v20.2.xml" />
+    <Content Include="bin\Debug\DevExpress.XtraPrinting.v20.2.dll" />
+    <Content Include="bin\Debug\DevExpress.XtraRichEdit.v20.2.dll" />
+    <Content Include="bin\Debug\DevExpress.XtraRichEdit.v20.2.xml" />
+    <Content Include="bin\Debug\DevExpress.XtraTreeList.v20.2.dll" />
+    <Content Include="bin\Debug\DevExpress.XtraTreeList.v20.2.xml" />
+    <Content Include="bin\Debug\DevExpress.XtraVerticalGrid.v20.2.dll" />
+    <Content Include="bin\Debug\DevExpress.XtraVerticalGrid.v20.2.xml" />
+    <Content Include="bin\Debug\de\DevExpress.Data.v20.2.resources.dll" />
+    <Content Include="bin\Debug\de\DevExpress.DataAccess.v20.2.resources.dll" />
+    <Content Include="bin\Debug\de\DevExpress.Office.v20.2.Core.resources.dll" />
+    <Content Include="bin\Debug\de\DevExpress.Pdf.v20.2.Core.resources.dll" />
+    <Content Include="bin\Debug\de\DevExpress.Printing.v20.2.Core.resources.dll" />
+    <Content Include="bin\Debug\de\DevExpress.RichEdit.v20.2.Core.resources.dll" />
+    <Content Include="bin\Debug\de\DevExpress.Sparkline.v20.2.Core.resources.dll" />
+    <Content Include="bin\Debug\de\DevExpress.Utils.v20.2.resources.dll" />
+    <Content Include="bin\Debug\de\DevExpress.Utils.v20.2.UI.resources.dll" />
+    <Content Include="bin\Debug\de\DevExpress.Xpo.v20.2.resources.dll" />
+    <Content Include="bin\Debug\de\DevExpress.XtraBars.v20.2.resources.dll" />
+    <Content Include="bin\Debug\de\DevExpress.XtraCharts.v20.2.resources.dll" />
+    <Content Include="bin\Debug\de\DevExpress.XtraCharts.v20.2.Wizard.resources.dll" />
+    <Content Include="bin\Debug\de\DevExpress.XtraEditors.v20.2.resources.dll" />
+    <Content Include="bin\Debug\de\DevExpress.XtraGrid.v20.2.resources.dll" />
+    <Content Include="bin\Debug\de\DevExpress.XtraLayout.v20.2.resources.dll" />
+    <Content Include="bin\Debug\de\DevExpress.XtraNavBar.v20.2.resources.dll" />
+    <Content Include="bin\Debug\de\DevExpress.XtraPrinting.v20.2.resources.dll" />
+    <Content Include="bin\Debug\de\DevExpress.XtraRichEdit.v20.2.resources.dll" />
+    <Content Include="bin\Debug\de\DevExpress.XtraTreeList.v20.2.resources.dll" />
+    <Content Include="bin\Debug\de\DevExpress.XtraVerticalGrid.v20.2.resources.dll" />
+    <Content Include="bin\Debug\EntityFramework.dll" />
+    <Content Include="bin\Debug\EntityFramework.SqlServer.dll" />
+    <Content Include="bin\Debug\en\ReadCode.resources.dll" />
+    <Content Include="bin\Debug\en\VC3000_Controller.resources.dll" />
+    <Content Include="bin\Debug\es\DevExpress.Data.v20.2.resources.dll" />
+    <Content Include="bin\Debug\es\DevExpress.DataAccess.v20.2.resources.dll" />
+    <Content Include="bin\Debug\es\DevExpress.Office.v20.2.Core.resources.dll" />
+    <Content Include="bin\Debug\es\DevExpress.Pdf.v20.2.Core.resources.dll" />
+    <Content Include="bin\Debug\es\DevExpress.Printing.v20.2.Core.resources.dll" />
+    <Content Include="bin\Debug\es\DevExpress.RichEdit.v20.2.Core.resources.dll" />
+    <Content Include="bin\Debug\es\DevExpress.Sparkline.v20.2.Core.resources.dll" />
+    <Content Include="bin\Debug\es\DevExpress.Utils.v20.2.resources.dll" />
+    <Content Include="bin\Debug\es\DevExpress.Utils.v20.2.UI.resources.dll" />
+    <Content Include="bin\Debug\es\DevExpress.Xpo.v20.2.resources.dll" />
+    <Content Include="bin\Debug\es\DevExpress.XtraBars.v20.2.resources.dll" />
+    <Content Include="bin\Debug\es\DevExpress.XtraCharts.v20.2.resources.dll" />
+    <Content Include="bin\Debug\es\DevExpress.XtraCharts.v20.2.Wizard.resources.dll" />
+    <Content Include="bin\Debug\es\DevExpress.XtraEditors.v20.2.resources.dll" />
+    <Content Include="bin\Debug\es\DevExpress.XtraGrid.v20.2.resources.dll" />
+    <Content Include="bin\Debug\es\DevExpress.XtraLayout.v20.2.resources.dll" />
+    <Content Include="bin\Debug\es\DevExpress.XtraNavBar.v20.2.resources.dll" />
+    <Content Include="bin\Debug\es\DevExpress.XtraPrinting.v20.2.resources.dll" />
+    <Content Include="bin\Debug\es\DevExpress.XtraRichEdit.v20.2.resources.dll" />
+    <Content Include="bin\Debug\es\DevExpress.XtraTreeList.v20.2.resources.dll" />
+    <Content Include="bin\Debug\es\DevExpress.XtraVerticalGrid.v20.2.resources.dll" />
+    <Content Include="bin\Debug\Gma.System.MouseKeyHook.dll" />
+    <Content Include="bin\Debug\halcondotnet.dll" />
+    <Content Include="bin\Debug\hdevenginedotnet.dll" />
+    <Content Include="bin\Debug\hdevenginedotnetxl.dll" />
+    <Content Include="bin\Debug\Images_Test\2.png" />
+    <Content Include="bin\Debug\Images_Test\21.jpg" />
+    <Content Include="bin\Debug\Images_Test\3.png" />
+    <Content Include="bin\Debug\Images_Test\4.png" />
+    <Content Include="bin\Debug\Images_Test\5.png" />
+    <Content Include="bin\Debug\Images_Test\Capture.PNG" />
+    <Content Include="bin\Debug\Images_Test\test.png" />
+    <Content Include="bin\Debug\ja\DevExpress.Data.v20.2.resources.dll" />
+    <Content Include="bin\Debug\ja\DevExpress.DataAccess.v20.2.resources.dll" />
+    <Content Include="bin\Debug\ja\DevExpress.Office.v20.2.Core.resources.dll" />
+    <Content Include="bin\Debug\ja\DevExpress.Pdf.v20.2.Core.resources.dll" />
+    <Content Include="bin\Debug\ja\DevExpress.Printing.v20.2.Core.resources.dll" />
+    <Content Include="bin\Debug\ja\DevExpress.RichEdit.v20.2.Core.resources.dll" />
+    <Content Include="bin\Debug\ja\DevExpress.Sparkline.v20.2.Core.resources.dll" />
+    <Content Include="bin\Debug\ja\DevExpress.Utils.v20.2.resources.dll" />
+    <Content Include="bin\Debug\ja\DevExpress.Utils.v20.2.UI.resources.dll" />
+    <Content Include="bin\Debug\ja\DevExpress.Xpo.v20.2.resources.dll" />
+    <Content Include="bin\Debug\ja\DevExpress.XtraBars.v20.2.resources.dll" />
+    <Content Include="bin\Debug\ja\DevExpress.XtraCharts.v20.2.resources.dll" />
+    <Content Include="bin\Debug\ja\DevExpress.XtraCharts.v20.2.Wizard.resources.dll" />
+    <Content Include="bin\Debug\ja\DevExpress.XtraEditors.v20.2.resources.dll" />
+    <Content Include="bin\Debug\ja\DevExpress.XtraGrid.v20.2.resources.dll" />
+    <Content Include="bin\Debug\ja\DevExpress.XtraLayout.v20.2.resources.dll" />
+    <Content Include="bin\Debug\ja\DevExpress.XtraNavBar.v20.2.resources.dll" />
+    <Content Include="bin\Debug\ja\DevExpress.XtraPrinting.v20.2.resources.dll" />
+    <Content Include="bin\Debug\ja\DevExpress.XtraRichEdit.v20.2.resources.dll" />
+    <Content Include="bin\Debug\ja\DevExpress.XtraTreeList.v20.2.resources.dll" />
+    <Content Include="bin\Debug\ja\DevExpress.XtraVerticalGrid.v20.2.resources.dll" />
+    <Content Include="bin\Debug\log4net.dll" />
+    <Content Include="bin\Debug\Machine\MachineInfo.xml" />
+    <Content Include="bin\Debug\Machine\SettingTriggerVC3000.xml" />
+    <Content Include="bin\Debug\MC_PROTOCOL.dll" />
+    <Content Include="bin\Debug\Microsoft.Office.Interop.Excel.dll" />
+    <Content Include="bin\Debug\mscorlib.dll" />
+    <Content Include="bin\Debug\MvIOInterfaceBox.dll" />
+    <Content Include="bin\Debug\MvIOInterfaceBox.pdb" />
+    <Content Include="bin\Debug\MvSerial.dll" />
+    <Content Include="bin\Debug\ReadCode.exe" />
+    <Content Include="bin\Debug\ReadCode.pdb" />
+    <Content Include="bin\Debug\ru\DevExpress.Data.v20.2.resources.dll" />
+    <Content Include="bin\Debug\ru\DevExpress.DataAccess.v20.2.resources.dll" />
+    <Content Include="bin\Debug\ru\DevExpress.Office.v20.2.Core.resources.dll" />
+    <Content Include="bin\Debug\ru\DevExpress.Pdf.v20.2.Core.resources.dll" />
+    <Content Include="bin\Debug\ru\DevExpress.Printing.v20.2.Core.resources.dll" />
+    <Content Include="bin\Debug\ru\DevExpress.RichEdit.v20.2.Core.resources.dll" />
+    <Content Include="bin\Debug\ru\DevExpress.Sparkline.v20.2.Core.resources.dll" />
+    <Content Include="bin\Debug\ru\DevExpress.Utils.v20.2.resources.dll" />
+    <Content Include="bin\Debug\ru\DevExpress.Utils.v20.2.UI.resources.dll" />
+    <Content Include="bin\Debug\ru\DevExpress.Xpo.v20.2.resources.dll" />
+    <Content Include="bin\Debug\ru\DevExpress.XtraBars.v20.2.resources.dll" />
+    <Content Include="bin\Debug\ru\DevExpress.XtraCharts.v20.2.resources.dll" />
+    <Content Include="bin\Debug\ru\DevExpress.XtraCharts.v20.2.Wizard.resources.dll" />
+    <Content Include="bin\Debug\ru\DevExpress.XtraEditors.v20.2.resources.dll" />
+    <Content Include="bin\Debug\ru\DevExpress.XtraGrid.v20.2.resources.dll" />
+    <Content Include="bin\Debug\ru\DevExpress.XtraLayout.v20.2.resources.dll" />
+    <Content Include="bin\Debug\ru\DevExpress.XtraNavBar.v20.2.resources.dll" />
+    <Content Include="bin\Debug\ru\DevExpress.XtraPrinting.v20.2.resources.dll" />
+    <Content Include="bin\Debug\ru\DevExpress.XtraRichEdit.v20.2.resources.dll" />
+    <Content Include="bin\Debug\ru\DevExpress.XtraTreeList.v20.2.resources.dll" />
+    <Content Include="bin\Debug\ru\DevExpress.XtraVerticalGrid.v20.2.resources.dll" />
+    <Content Include="bin\Debug\SettingMachine.xml" />
+    <Content Include="bin\Debug\System.Data.SQLite.dll" />
+    <Content Include="bin\Debug\System.Data.SQLite.EF6.dll" />
+    <Content Include="bin\Debug\System.Data.SQLite.Linq.dll" />
+    <Content Include="bin\Debug\WaitWnd.dll" />
+    <Content Include="bin\Debug\Win64\MvIOInterfaceBox.dll" />
+    <Content Include="bin\Debug\Win64\MvIOInterfaceBox.pdb" />
+    <Content Include="bin\Debug\WinIo32.dll" />
+    <Content Include="bin\Debug\WinIo64.dll" />
+    <Content Include="bin\Debug\x64\SQLite.Interop.dll" />
+    <Content Include="bin\Debug\x86\SQLite.Interop.dll" />
+    <Content Include="Resources\Compelete.png" />
+    <Content Include="Resources\Error_gif.gif" />
+    <None Include="Resources\ExportToXLSX_32x32.png" />
+    <Content Include="Resources\icons8_approval_16px.png" />
+    <Content Include="Resources\icons8_camera_30px.png" />
+    <Content Include="Resources\icons8_camera_32.png" />
+    <Content Include="Resources\icons8_cancel_16px.png" />
+    <Content Include="Resources\icons8_cancel_16px1.png" />
+    <Content Include="Resources\icons8_cancel_32.png" />
+    <Content Include="Resources\icons8_check_circle_32.png" />
+    <Content Include="Resources\icons8_Close_48px.png" />
+    <Content Include="Resources\icons8_create_document.ico" />
+    <Content Include="Resources\icons8_database_view_24px.png" />
+    <Content Include="Resources\icons8_delete_document_16px.png" />
+    <Content Include="Resources\icons8_edit_16px.png" />
+    <Content Include="Resources\icons8_info_32.png" />
+    <Content Include="Resources\icons8_learning_16px.png" />
+    <Content Include="Resources\icons8_maximize_button_16.png" />
+    <Content Include="Resources\icons8_new_copy_16px.png" />
+    <Content Include="Resources\icons8_new_file_32.png" />
+    <Content Include="Resources\icons8_new_view.ico" />
+    <Content Include="Resources\icons8_oval_loop_24px.png" />
+    <Content Include="Resources\icons8_play_32.png" />
+    <Content Include="Resources\icons8_save_16px.png" />
+    <None Include="Resources\icons8_save_16px1.png" />
+    <None Include="Resources\icons8_save_50px.png" />
+    <Content Include="Resources\icons8_settings_16.png" />
+    <Content Include="Resources\icons8_settings_32.png" />
+    <Content Include="Resources\icons8_show_property_16px.png" />
+    <Content Include="Resources\icons8_show_property_24px.png" />
+    <Content Include="Resources\icons8_start_30px.png" />
+    <Content Include="Resources\icons8_upload_to_the_cloud_24px.png" />
+    <Content Include="Resources\icons8_verified_account_48px.png" />
+    <Content Include="Resources\icons8_video_call_30px.png" />
+    <Content Include="Resources\icons8_video_call_32.png" />
+    <Content Include="Resources\loader.gif" />
+    <Content Include="Resources\Logo_Mektec.jpg" />
+    <Content Include="Resources\new_file_32px.png" />
+    <Content Include="Resources\new_file_32px1.png" />
+    <Content Include="Resources\new_file_32px2.png" />
+    <Content Include="Resources\Warning_gif.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="bin\Debug\Win64\MvIOInterfaceBox.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="bin\Release\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
+    <Error Condition="!Exists('..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.117.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.117.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets'))" />
+  </Target>
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
+  <Import Project="..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.117.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets" Condition="Exists('..\packages\Stub.System.Data.SQLite.Core.NetFramework.1.0.117.0\build\net46\Stub.System.Data.SQLite.Core.NetFramework.targets')" />
+</Project>

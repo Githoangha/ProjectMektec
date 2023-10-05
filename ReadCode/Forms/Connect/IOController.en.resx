@@ -1,0 +1,603 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="comboBoxEdgeInfoEnable.Location" type="System.Drawing.Point, System.Drawing">
+    <value>102, 85</value>
+  </data>
+  <data name="comboBoxEdgeInfoEnable.Size" type="System.Drawing.Size, System.Drawing">
+    <value>104, 20</value>
+  </data>
+  <data name="label28.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 85</value>
+  </data>
+  <data name="label28.Size" type="System.Drawing.Size, System.Drawing">
+    <value>83, 12</value>
+  </data>
+  <data name="label28.Text" xml:space="preserve">
+    <value>Upload Signal</value>
+  </data>
+  <data name="btnInputSet.Text" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+  <data name="cbInputPort.Location" type="System.Drawing.Point, System.Drawing">
+    <value>102, 23</value>
+  </data>
+  <data name="cbInputPort.Size" type="System.Drawing.Size, System.Drawing">
+    <value>104, 20</value>
+  </data>
+  <data name="label8.Size" type="System.Drawing.Size, System.Drawing">
+    <value>29, 12</value>
+  </data>
+  <data name="label8.Text" xml:space="preserve">
+    <value>Port</value>
+  </data>
+  <data name="label14.Location" type="System.Drawing.Point, System.Drawing">
+    <value>9, 147</value>
+  </data>
+  <data name="label14.Size" type="System.Drawing.Size, System.Drawing">
+    <value>89, 12</value>
+  </data>
+  <data name="label14.Text" xml:space="preserve">
+    <value>Debouncer Time</value>
+  </data>
+  <data name="label20.Location" type="System.Drawing.Point, System.Drawing">
+    <value>189, 145</value>
+  </data>
+  <data name="tbGlitchTime.Location" type="System.Drawing.Point, System.Drawing">
+    <value>102, 142</value>
+  </data>
+  <data name="tbGlitchTime.Size" type="System.Drawing.Size, System.Drawing">
+    <value>82, 19</value>
+  </data>
+  <data name="tbInputDelay.Location" type="System.Drawing.Point, System.Drawing">
+    <value>102, 112</value>
+  </data>
+  <data name="tbInputDelay.Size" type="System.Drawing.Size, System.Drawing">
+    <value>82, 19</value>
+  </data>
+  <data name="label7.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 114</value>
+  </data>
+  <data name="label7.Size" type="System.Drawing.Size, System.Drawing">
+    <value>83, 12</value>
+  </data>
+  <data name="label7.Text" xml:space="preserve">
+    <value>Trigger Delay</value>
+  </data>
+  <data name="cbInputEdgeType.Location" type="System.Drawing.Point, System.Drawing">
+    <value>102, 54</value>
+  </data>
+  <data name="cbInputEdgeType.Size" type="System.Drawing.Size, System.Drawing">
+    <value>104, 20</value>
+  </data>
+  <data name="label6.Location" type="System.Drawing.Point, System.Drawing">
+    <value>11, 53</value>
+  </data>
+  <data name="label6.Size" type="System.Drawing.Size, System.Drawing">
+    <value>89, 12</value>
+  </data>
+  <data name="label6.Text" xml:space="preserve">
+    <value>Trigger Signal</value>
+  </data>
+  <data name="gbInputSettings.Text" xml:space="preserve">
+    <value>Input Parameters</value>
+  </data>
+  <data name="btnClearMessage.Text" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="btnSaveMessage.Text" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="gbBrowserWindow.Text" xml:space="preserve">
+    <value>Message</value>
+  </data>
+  <data name="groupBox6.Text" xml:space="preserve">
+    <value>Serial Port Connection Settings</value>
+  </data>
+  <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>53, 12</value>
+  </data>
+  <data name="label1.Text" xml:space="preserve">
+    <value>Port No.</value>
+  </data>
+  <data name="label4.Size" type="System.Drawing.Size, System.Drawing">
+    <value>53, 12</value>
+  </data>
+  <data name="label4.Text" xml:space="preserve">
+    <value>Stop Bit</value>
+  </data>
+  <data name="btnOpenOrCloseCom.Size" type="System.Drawing.Size, System.Drawing">
+    <value>86, 124</value>
+  </data>
+  <data name="btnOpenOrCloseCom.Text" xml:space="preserve">
+    <value>Connect</value>
+  </data>
+  <data name="label5.Location" type="System.Drawing.Point, System.Drawing">
+    <value>6, 121</value>
+  </data>
+  <data name="label5.Size" type="System.Drawing.Size, System.Drawing">
+    <value>65, 12</value>
+  </data>
+  <data name="label5.Text" xml:space="preserve">
+    <value>Parity Bit</value>
+  </data>
+  <data name="label3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>53, 12</value>
+  </data>
+  <data name="label3.Text" xml:space="preserve">
+    <value>Data Bit</value>
+  </data>
+  <data name="label2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 43</value>
+  </data>
+  <data name="label2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>59, 12</value>
+  </data>
+  <data name="label2.Text" xml:space="preserve">
+    <value>Baud Rate</value>
+  </data>
+  <data name="gbComCtrl.Text" xml:space="preserve">
+    <value>Initial Connection</value>
+  </data>
+  <data name="label9.Size" type="System.Drawing.Size, System.Drawing">
+    <value>71, 24</value>
+  </data>
+  <data name="label9.Text" xml:space="preserve">
+    <value>Electrical 
+Level</value>
+  </data>
+  <data name="label10.Location" type="System.Drawing.Point, System.Drawing">
+    <value>220, 92</value>
+  </data>
+  <data name="label10.Size" type="System.Drawing.Size, System.Drawing">
+    <value>41, 24</value>
+  </data>
+  <data name="label10.Text" xml:space="preserve">
+    <value>Pulse 
+Width</value>
+  </data>
+  <data name="lbOutputPattern.Size" type="System.Drawing.Size, System.Drawing">
+    <value>29, 12</value>
+  </data>
+  <data name="lbOutputPattern.Text" xml:space="preserve">
+    <value>Mode</value>
+  </data>
+  <data name="label13.Text" xml:space="preserve">
+    <value>Duration</value>
+  </data>
+  <data name="label21.Size" type="System.Drawing.Size, System.Drawing">
+    <value>29, 12</value>
+  </data>
+  <data name="label21.Text" xml:space="preserve">
+    <value>Port</value>
+  </data>
+  <data name="btnOutputSet.Text" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="label11.Location" type="System.Drawing.Point, System.Drawing">
+    <value>218, 55</value>
+  </data>
+  <data name="label11.Size" type="System.Drawing.Size, System.Drawing">
+    <value>41, 24</value>
+  </data>
+  <data name="label11.Text" xml:space="preserve">
+    <value>Pulse 
+Period</value>
+  </data>
+  <data name="gbOutputSettings.Text" xml:space="preserve">
+    <value>Output Parameters</value>
+  </data>
+  <data name="btnSaveparam.Location" type="System.Drawing.Point, System.Drawing">
+    <value>489, 18</value>
+  </data>
+  <data name="btnSaveparam.Text" xml:space="preserve">
+    <value>Save Param</value>
+  </data>
+  <data name="btnReboot.Location" type="System.Drawing.Point, System.Drawing">
+    <value>643, 18</value>
+  </data>
+  <data name="btnReboot.Text" xml:space="preserve">
+    <value>Reboot</value>
+  </data>
+  <data name="btnResetParam.Location" type="System.Drawing.Point, System.Drawing">
+    <value>335, 18</value>
+  </data>
+  <data name="btnResetParam.Text" xml:space="preserve">
+    <value>Reset</value>
+  </data>
+  <data name="btnEdgeDetection.Location" type="System.Drawing.Point, System.Drawing">
+    <value>64, 18</value>
+  </data>
+  <data name="btnEdgeDetection.Size" type="System.Drawing.Size, System.Drawing">
+    <value>218, 34</value>
+  </data>
+  <data name="btnEdgeDetection.Text" xml:space="preserve">
+    <value>Enable Edge Detection</value>
+  </data>
+  <data name="gbOtherSettings.Text" xml:space="preserve">
+    <value>Others</value>
+  </data>
+  <data name="btGPOHigh.Text" xml:space="preserve">
+    <value>Enable</value>
+  </data>
+  <data name="btGPOLow.Text" xml:space="preserve">
+    <value>Disable</value>
+  </data>
+  <data name="label15.Text" xml:space="preserve">
+    <value>Polarity</value>
+  </data>
+  <data name="label31.Size" type="System.Drawing.Size, System.Drawing">
+    <value>29, 12</value>
+  </data>
+  <data name="label31.Text" xml:space="preserve">
+    <value>Port</value>
+  </data>
+  <data name="gbLighjtValue.Text" xml:space="preserve">
+    <value>Brightness</value>
+  </data>
+  <data name="label33.Text" xml:space="preserve">
+    <value>Duration</value>
+  </data>
+  <data name="rbDownEdge.Size" type="System.Drawing.Size, System.Drawing">
+    <value>71, 28</value>
+  </data>
+  <data name="rbDownEdge.Text" xml:space="preserve">
+    <value>Falling 
+Edge</value>
+  </data>
+  <data name="rbRisingEdge.Size" type="System.Drawing.Size, System.Drawing">
+    <value>61, 28</value>
+  </data>
+  <data name="rbRisingEdge.Text" xml:space="preserve">
+    <value>Rising 
+Edge</value>
+  </data>
+  <data name="groupBox3.Text" xml:space="preserve">
+    <value>Trigger Signal</value>
+  </data>
+  <data name="btnLightSet.Text" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+  <data name="rdbLightStateOff.Size" type="System.Drawing.Size, System.Drawing">
+    <value>41, 16</value>
+  </data>
+  <data name="rdbLightStateOff.Text" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="rdbLightStateOn.Size" type="System.Drawing.Size, System.Drawing">
+    <value>35, 16</value>
+  </data>
+  <data name="rdbLightStateOn.Text" xml:space="preserve">
+    <value>On</value>
+  </data>
+  <data name="gbLightState.Text" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="groupBox5.Text" xml:space="preserve">
+    <value>Extended Light Source Settings</value>
+  </data>
+  <data name="lbIOLevel3.Location" type="System.Drawing.Point, System.Drawing">
+    <value>56, 65</value>
+  </data>
+  <data name="lbIOLevel3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>41, 12</value>
+  </data>
+  <data name="lbIOLevel3.Text" xml:space="preserve">
+    <value>Level4</value>
+  </data>
+  <data name="lbIOLevel2.Location" type="System.Drawing.Point, System.Drawing">
+    <value>57, 34</value>
+  </data>
+  <data name="lbIOLevel2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>41, 12</value>
+  </data>
+  <data name="lbIOLevel2.Text" xml:space="preserve">
+    <value>Level3</value>
+  </data>
+  <data name="lbIOLevel1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>11, 64</value>
+  </data>
+  <data name="lbIOLevel1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>41, 12</value>
+  </data>
+  <data name="lbIOLevel1.Text" xml:space="preserve">
+    <value>Level2</value>
+  </data>
+  <data name="lbIOLevel0.Location" type="System.Drawing.Point, System.Drawing">
+    <value>12, 34</value>
+  </data>
+  <data name="lbIOLevel0.Size" type="System.Drawing.Size, System.Drawing">
+    <value>41, 12</value>
+  </data>
+  <data name="lbIOLevel0.Text" xml:space="preserve">
+    <value>Level1</value>
+  </data>
+  <data name="btnGetIOLevel.Location" type="System.Drawing.Point, System.Drawing">
+    <value>212, 32</value>
+  </data>
+  <data name="btnGetIOLevel.Text" xml:space="preserve">
+    <value>Detect</value>
+  </data>
+  <data name="lbIOLevel7.Location" type="System.Drawing.Point, System.Drawing">
+    <value>155, 64</value>
+  </data>
+  <data name="lbIOLevel7.Size" type="System.Drawing.Size, System.Drawing">
+    <value>41, 12</value>
+  </data>
+  <data name="lbIOLevel7.Text" xml:space="preserve">
+    <value>Level8</value>
+  </data>
+  <data name="lbIOLevel6.Location" type="System.Drawing.Point, System.Drawing">
+    <value>156, 34</value>
+  </data>
+  <data name="lbIOLevel6.Size" type="System.Drawing.Size, System.Drawing">
+    <value>41, 12</value>
+  </data>
+  <data name="lbIOLevel6.Text" xml:space="preserve">
+    <value>Level7</value>
+  </data>
+  <data name="lbIOLevel5.Location" type="System.Drawing.Point, System.Drawing">
+    <value>103, 65</value>
+  </data>
+  <data name="lbIOLevel5.Size" type="System.Drawing.Size, System.Drawing">
+    <value>41, 12</value>
+  </data>
+  <data name="lbIOLevel5.Text" xml:space="preserve">
+    <value>Level6</value>
+  </data>
+  <data name="lbIOLevel4.Location" type="System.Drawing.Point, System.Drawing">
+    <value>104, 34</value>
+  </data>
+  <data name="lbIOLevel4.Size" type="System.Drawing.Size, System.Drawing">
+    <value>41, 12</value>
+  </data>
+  <data name="lbIOLevel4.Text" xml:space="preserve">
+    <value>Level5</value>
+  </data>
+  <data name="gbInputLevel.Text" xml:space="preserve">
+    <value>Input Signal Detection</value>
+  </data>
+  <data name="lblGPI3.Size" type="System.Drawing.Size, System.Drawing">
+    <value>41, 12</value>
+  </data>
+  <data name="lblGPI3.Text" xml:space="preserve">
+    <value>Level3</value>
+  </data>
+  <data name="lblGPI2.Size" type="System.Drawing.Size, System.Drawing">
+    <value>41, 12</value>
+  </data>
+  <data name="lblGPI2.Text" xml:space="preserve">
+    <value>Level2</value>
+  </data>
+  <data name="lblGPI1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>41, 12</value>
+  </data>
+  <data name="lblGPI1.Text" xml:space="preserve">
+    <value>Level1</value>
+  </data>
+  <data name="btGetGPI.Text" xml:space="preserve">
+    <value>Detect</value>
+  </data>
+  <data name="label27.Location" type="System.Drawing.Point, System.Drawing">
+    <value>130, 28</value>
+  </data>
+  <data name="lbSDKVersion.Location" type="System.Drawing.Point, System.Drawing">
+    <value>722, 28</value>
+  </data>
+  <data name="label19.Location" type="System.Drawing.Point, System.Drawing">
+    <value>646, 27</value>
+  </data>
+  <data name="label19.Size" type="System.Drawing.Size, System.Drawing">
+    <value>71, 12</value>
+  </data>
+  <data name="label19.Text" xml:space="preserve">
+    <value>SDK Version</value>
+  </data>
+  <data name="label26.Location" type="System.Drawing.Point, System.Drawing">
+    <value>24, 27</value>
+  </data>
+  <data name="label26.Size" type="System.Drawing.Size, System.Drawing">
+    <value>101, 12</value>
+  </data>
+  <data name="label26.Text" xml:space="preserve">
+    <value>Applicable Model</value>
+  </data>
+  <data name="lbSoftwareVersion.Location" type="System.Drawing.Point, System.Drawing">
+    <value>307, 28</value>
+  </data>
+  <data name="lbSoftwareVersion.Size" type="System.Drawing.Size, System.Drawing">
+    <value>89, 12</value>
+  </data>
+  <data name="lbSoftwareVersion.Text" xml:space="preserve">
+    <value>1.1.0_20220428</value>
+  </data>
+  <data name="lbSoftwareVersionText.Location" type="System.Drawing.Point, System.Drawing">
+    <value>200, 28</value>
+  </data>
+  <data name="lbSoftwareVersionText.Size" type="System.Drawing.Size, System.Drawing">
+    <value>101, 12</value>
+  </data>
+  <data name="lbSoftwareVersionText.Text" xml:space="preserve">
+    <value>Software Version</value>
+  </data>
+  <data name="lbFirmwareVersion.Location" type="System.Drawing.Point, System.Drawing">
+    <value>524, 28</value>
+  </data>
+  <data name="lbFirmwareVersionText.Location" type="System.Drawing.Point, System.Drawing">
+    <value>417, 28</value>
+  </data>
+  <data name="lbFirmwareVersionText.Size" type="System.Drawing.Size, System.Drawing">
+    <value>101, 12</value>
+  </data>
+  <data name="lbFirmwareVersionText.Text" xml:space="preserve">
+    <value>Firmware Version</value>
+  </data>
+  <data name="gbVersionSetting.Size" type="System.Drawing.Size, System.Drawing">
+    <value>849, 58</value>
+  </data>
+  <data name="groupBox7.Text" xml:space="preserve">
+    <value>Input Settings</value>
+  </data>
+  <data name="label23.Text" xml:space="preserve">
+    <value>Polarity</value>
+  </data>
+  <data name="btnOutPutEnable.Location" type="System.Drawing.Point, System.Drawing">
+    <value>289, 28</value>
+  </data>
+  <data name="btnOutPutEnable.Text" xml:space="preserve">
+    <value>Enable</value>
+  </data>
+  <data name="btnOutPutUnEnable.Location" type="System.Drawing.Point, System.Drawing">
+    <value>412, 29</value>
+  </data>
+  <data name="btnOutPutUnEnable.Text" xml:space="preserve">
+    <value>Disable</value>
+  </data>
+  <data name="ckbEnableOutPort7.Location" type="System.Drawing.Point, System.Drawing">
+    <value>202, 59</value>
+  </data>
+  <data name="ckbEnableOutPort5.Location" type="System.Drawing.Point, System.Drawing">
+    <value>149, 59</value>
+  </data>
+  <data name="ckbEnableOutPort3.Location" type="System.Drawing.Point, System.Drawing">
+    <value>91, 59</value>
+  </data>
+  <data name="ckbEnableOutPort1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>40, 59</value>
+  </data>
+  <data name="gbOutputEnable.Text" xml:space="preserve">
+    <value>Output Enable</value>
+  </data>
+  <data name="groupBox8.Text" xml:space="preserve">
+    <value>Output Settings</value>
+  </data>
+  <data name="groupBox4.Text" xml:space="preserve">
+    <value>Extended IO Settings</value>
+  </data>
+  <data name="groupBox9.Text" xml:space="preserve">
+    <value>GPIO Settings</value>
+  </data>
+  <data name="btApplyCOM.Text" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+  <data name="groupBox1.Text" xml:space="preserve">
+    <value>RS232/485/422 Settings</value>
+  </data>
+</root>
