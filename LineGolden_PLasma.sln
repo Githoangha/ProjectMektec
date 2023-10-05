@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32126.315
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LineGolden_PLasma", "LineGolden_PLasma.csproj", "{6644999D-C440-4440-8FB7-5052B5408258}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6644999D-C440-4440-8FB7-5052B5408258}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6644999D-C440-4440-8FB7-5052B5408258}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6644999D-C440-4440-8FB7-5052B5408258}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6644999D-C440-4440-8FB7-5052B5408258}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {88ACEB83-2A1F-44CC-B3B6-275EAA4FFEC6}
+	EndGlobalSection
+EndGlobal
