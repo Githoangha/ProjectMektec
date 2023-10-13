@@ -466,7 +466,7 @@ namespace ReadCode
         #region Vision Read Barcode
         private int Step_ReadCode = 0;
         public static int oldPosition = 0;
-        
+
         private void ShowError(Exception ex = null)
         {
             this.Invoke(new MethodInvoker(delegate
@@ -496,6 +496,7 @@ namespace ReadCode
         bool BeginSnap = false;
         bool CompleteResult = false;
         Timer TimerShowKQ = new Timer();
+        CompleteFinishLot FinishLot = new CompleteFinishLot();
         private void MainVisonBarcode()
         {
             while (c_varGolbal.IsRun) // Vòng quét xử lý vision
@@ -828,7 +829,7 @@ namespace ReadCode
                                         {
                                             Support_SQL.SaveDataToBufferReadcode(ID_PrgCurrent, code_TagJigNonePCS, code_TagJigHavePCS, codePCS, date, lst_dataVision[0].NoLock, lst_dataVision[0].QualifyJig, c_varGolbal.LotID, c_varGolbal.MPN);
                                         }
-                                        
+
                                         if (checkNoLock && checkQualifyjig)
                                         {
                                             //Show data
@@ -840,7 +841,7 @@ namespace ReadCode
                                             {
                                                 ShowResultProcessReadCode("OK");
                                             }));
-                                            if(Support_SQL_PVI_Server.SaveStateFviByID(idUsingFVI, 1))//Update trạng thái hoàn thành chụp code ở máy trước plasma
+                                            if (Support_SQL_PVI_Server.SaveStateFviByID(idUsingFVI, 1))//Update trạng thái hoàn thành chụp code ở máy trước plasma
                                             {
 
                                             }
@@ -860,11 +861,11 @@ namespace ReadCode
                                                 ShowResultProcessReadCode("NG");
                                             }));
                                         }
-                                        
-                                       
+
+
 
                                     }
-                                   
+
                                 }
                                 else
                                 {
@@ -935,7 +936,7 @@ namespace ReadCode
                                 // NB: 18022023
                                 // Kiểm tra Code Jib đã có bất kỳ công đoạn FVI chưa?
                                 // -> sử dụng class Support_SQL_PVI_Server.cs
-                                
+
                                 DataTable dtFVI = new DataTable();
                                 this.Invoke(new Action(() => usingFVI = Support_SQL.ToBoolean(Support_SQL.ExecuteScalar($"SELECT UsingFVI FROM ProgramMain WHERE ProgramName = '{cboProgram.Text.Trim()}'"))));
                                 for (int i = 0; i < List_CodeJig.Count; i++)
@@ -1109,7 +1110,7 @@ namespace ReadCode
                                 dgv_ShowInfoVision();
                             }));
                             //Save data to DB
-                            
+
                             try
                             {
                                 if (ListCheckData56.Count > 0)
@@ -1179,10 +1180,14 @@ namespace ReadCode
                                             //int id = Support_SQL.ToInt(Support_SQL.ExecuteScalar($"SELECT ID FROM Readcode WHERE CodePCS = '{codePCS}' AND StatusUpload = false"));
                                             if (table.Rows.Count >= 0)
                                             {
+                                                string strIDDelete = "";
+                                                List<int> lstIDDelete = new List<int>();
                                                 for (int i = 0; i < table.Rows.Count; i++)
                                                 {
-                                                    Support_SQL.ExecuteScalar($"DELETE FROM ReadCode WHERE ID={table.Rows[i]["ID"]}");
+                                                    lstIDDelete.Add(Lib.ToInt(table.Rows[i]["ID"]));
                                                 }
+                                                strIDDelete = string.Join(",", lstIDDelete);
+                                                Support_SQL.ExecuteScalar($"DELETE FROM ReadCode WHERE ID IN ({strIDDelete})");
                                             }
                                             //Save to DBReadCode
                                             if (usingFVI)
@@ -1204,6 +1209,7 @@ namespace ReadCode
                                             element.Status = "OK";
                                             lst_DataExcel.Add(element);
                                             Upload_DB_Excel(lst_DataExcel);
+
                                             //HuyNV 01-03-2023 nếu chỉ có máy Plasma thôi thì k cần upload dữ liệu tới may FVI
                                             //20-02-2023
                                             //Upadte to DBFVI
@@ -1274,6 +1280,7 @@ namespace ReadCode
                                     }
                                     else
                                     {
+
                                         this.Invoke(new MethodInvoker(delegate
                                         {
                                             ShowResultProcessReadCode("NG");
@@ -1300,6 +1307,7 @@ namespace ReadCode
                                 new frm_ShowDialog(frm_ShowDialog.Icon_Show.Error, $"Save Data is fail \r\n {Ex}").ShowDialog();
                                 //frm_show_MainVisonBarcode.ShowDialog();
                             }
+                            while (!continueStep40) { }
                             //// NB - 28032023 -> Reset chkFinishLot
                             this.Invoke(new MethodInvoker(delegate
                             {
@@ -1343,6 +1351,32 @@ namespace ReadCode
                             //M100 đợi có tính hiệu nút bấm từ PLC if true next step else return
                             if (Bit_Trigger_Default || c_varGolbal._isProduct)
                             {
+
+                                #region kiểm tra finish lot
+                                if (FinishLot.ktLot)
+                                {
+                                    if (FinishLot.Time.AddMinutes(3) >= DateTime.Now)
+                                    {
+                                        if (PLC_Fx5.Connected)
+                                            PLC_Fx5.SetSingleBit("M30", true);
+                                        Step_ReadCode = 0;
+                                        new frm_ShowDialog(frm_ShowDialog.Icon_Show.Error, $"Sau khi kết thúc Lot phải chờ 3 phút mới có thể chạy tiếp\r ").ShowDialog();
+                                        break;
+                                    }
+                                }
+                                #endregion
+
+                                if (c_varGolbal.Finish_Lot)
+                                {
+                                    Frm_Confirm newFrm = new Frm_Confirm(Frm_Confirm.Icon_Show.Warning, "Bạn có muốn kết thúc Lot");
+                                    if (newFrm.ShowDialog() == DialogResult.Cancel)
+                                    {
+                                        if (PLC_Fx5.Connected)
+                                            PLC_Fx5.SetSingleBit("M30", true);
+                                        Step_ReadCode = 0;
+                                        break;
+                                    }
+                                }
                                 this.Invoke(new MethodInvoker(delegate
                                 {
                                     ShowResultProcessReadCode("WAIT");
@@ -1720,14 +1754,29 @@ namespace ReadCode
         /// Hiển thị kết quả chu trình đọc code
         /// </summary>
         /// <param name="result"></param>
+        bool continueStep40 = false;
         public void ShowResultProcessReadCode(string result)
         {
+            continueStep40 = false;
+            if (result.Contains("OK"))
+            {
+                if (c_varGolbal.Finish_Lot)
+                {
+                    FinishLot.ktLot = true;
+                    FinishLot.Time = DateTime.Now;
+                }
+            }
+            else
+            {
+                FinishLot.ktLot = false;
+            }
             switch (result)
             {
                 case "OK":
                     btnResultReadcode.BackColor = Color.Green;
                     btnResultReadcode.Text = "OK";
                     btnResultReadcode.ForeColor = Color.White;
+
                     break;
                 case "NG":
                     btnResultReadcode.BackColor = Color.Red;
@@ -1762,6 +1811,7 @@ namespace ReadCode
                 BeginSnap = false;
                 CompleteResult = false;
             }
+            continueStep40 = true;
         }
         private void TimerShowKQ_Tick(object sender, EventArgs e)
         {
@@ -2017,9 +2067,9 @@ namespace ReadCode
                 ///Màu trạng thái cột Status ICT
                 if (e.ColumnIndex == colStatusICT.Index)
                 {
-                    string chkICT = dgv_VisionReadcode[colStatusICT.Index, e.RowIndex].Value.ToString();
-                    string chkNoRead = dgv_VisionReadcode[colDataBarcode_VisionReadcode.Index, e.RowIndex].Value.ToString();
-                    string chkDouble = dgv_VisionReadcode[colStatusICT.Index, e.RowIndex].Value.ToString();
+                    string chkICT = Lib.ToString(dgv_VisionReadcode[colStatusICT.Index, e.RowIndex].Value);
+                    string chkNoRead = Lib.ToString(dgv_VisionReadcode[colDataBarcode_VisionReadcode.Index, e.RowIndex].Value);
+                    string chkDouble = Lib.ToString(dgv_VisionReadcode[colStatusICT.Index, e.RowIndex].Value);
                     bool chkFinishLot = Support_SQL.ToBoolean(dgv_VisionReadcode[colStatusFinishLot.Index, e.RowIndex].Value);
                     if (chkFinishLot && chkNoRead.Contains(c_varGolbal.Missing))
                     {
@@ -2041,10 +2091,10 @@ namespace ReadCode
                 ///Màu trạng thái cột NO.
                 if (e.ColumnIndex == colNo_VisionReadcode.Index)
                 {
-                    string chkICT = dgv_VisionReadcode[colStatusICT.Index, e.RowIndex].Value.ToString();
-                    string chkNoRead = dgv_VisionReadcode[colDataBarcode_VisionReadcode.Index, e.RowIndex].Value.ToString();
+                    string chkICT = Lib.ToString(dgv_VisionReadcode[colStatusICT.Index, e.RowIndex].Value);
+                    string chkNoRead = Lib.ToString(dgv_VisionReadcode[colDataBarcode_VisionReadcode.Index, e.RowIndex].Value);
                     bool chkFinishLot = Support_SQL.ToBoolean(dgv_VisionReadcode[colStatusFinishLot.Index, e.RowIndex].Value);
-                    string chkDouble = dgv_VisionReadcode[colNo_VisionReadcode.Index, e.RowIndex].Value.ToString();
+                    string chkDouble = Lib.ToString(dgv_VisionReadcode[colNo_VisionReadcode.Index, e.RowIndex].Value);
                     if (chkFinishLot && chkNoRead.Contains(c_varGolbal.Missing))
                     {
                         e.CellStyle.BackColor = Color.Magenta;
@@ -2065,7 +2115,7 @@ namespace ReadCode
                 ///Màu cột Pcs
                 if (e.ColumnIndex == colDataBarcode_VisionReadcode.Index)
                 {
-                    string chkDouble = dgv_VisionReadcode[colNo_VisionReadcode.Index, e.RowIndex].Value.ToString();
+                    string chkDouble = Lib.ToString(dgv_VisionReadcode[colNo_VisionReadcode.Index, e.RowIndex].Value);
                     if (chkDouble.Contains("="))
                     {
                         e.CellStyle.BackColor = Color.Orange;
@@ -2256,7 +2306,7 @@ namespace ReadCode
 
         public List<string> CheckHaveDataPlasma(List<dataVision> listPcs)
         {
-            
+
             List<string> Result = new List<string>();
             List<string> data = new List<string>();
             foreach (dataVision item in listPcs)
@@ -2304,12 +2354,18 @@ namespace ReadCode
             }));
         }
 
-        
+
 
         // NB - 19032023
         private void ChkFinishLot_CheckedChanged(object sender, EventArgs e)
         {
             c_varGolbal.Finish_Lot = chkFinishLot.Checked;
+        }
+
+        class CompleteFinishLot
+        {
+            public bool ktLot { get; set; }
+            public DateTime Time { get; set; }
         }
     }
 }
