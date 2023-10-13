@@ -861,37 +861,6 @@ namespace ReadCode
                     MessageBox.Show(ex.ToString());
                 }));
             }
-
-            #region TH2
-            // TH2:0.22s
-            //foreach (Code item in checkICT)
-            //{
-            //    try
-            //    {
-            //        string sql = $"Select Top 1 * From PcsResults Where RouteId ='100' AND LotNo='{c_varGolbal.LotID.Trim()}' AND PcsBarcode='{item.Content.Trim()}'";
-            //        var dt = new SQL_Execution().Execute_DataTable(c_varGolbal.IP_SMT, sql);
-            //        if (dt.Rows.Count > 0)
-            //        {
-            //            continue;
-            //        }
-            //        else
-            //        {
-            //            int index = outResult.ListData.FindIndex(x => x.Content.Contains(item.Content));
-            //            if (index >= 0)
-            //            {
-            //                outResult.ListData[index].statusICT = false;
-            //            }
-            //        }
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        this.Invoke(new Action(delegate
-            //        {
-            //            MessageBox.Show(ex.ToString());
-            //        }));
-            //    }
-            //}
-            #endregion
             DateTime stop = DateTime.Now;
             TimeSpan exetime = stop - start;
             var kq = exetime.TotalSeconds;
