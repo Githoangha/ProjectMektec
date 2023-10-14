@@ -816,7 +816,7 @@ namespace ReadCode
             List<string> data = new List<string>();
             foreach (Code item in checkICT)
             {
-                data.Add($"'{item.Content}'");
+                data.Add($"{item.Content}");
             }
             List<string> NoIct = new List<string>();
             try

@@ -31,10 +31,10 @@ namespace ReadCode
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frm_Main));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
             this.pn_Top = new System.Windows.Forms.Panel();
             this.lblMachineName_version = new System.Windows.Forms.Label();
             this.btnSettingMachine = new System.Windows.Forms.Button();
@@ -526,7 +526,6 @@ namespace ReadCode
             this.lbReadCodePCS.TabIndex = 87;
             this.lbReadCodePCS.Tag = "lbReadCodePCS_Main";
             this.lbReadCodePCS.Text = "Read CodePCS:";
-            this.lbReadCodePCS.Click += new System.EventHandler(this.lbReadCodePCS_Click);
             // 
             // lb_qtyCam
             // 
@@ -557,7 +556,7 @@ namespace ReadCode
             this.tbPanelBarcode.ColumnCount = 2;
             this.tableLayoutPanel1.SetColumnSpan(this.tbPanelBarcode, 2);
             this.tbPanelBarcode.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tbPanelBarcode.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 165F));
+            this.tbPanelBarcode.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 166F));
             this.tbPanelBarcode.Controls.Add(this.dgv_VisionReadcode, 0, 1);
             this.tbPanelBarcode.Controls.Add(this.panel1, 1, 0);
             this.tbPanelBarcode.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -577,14 +576,14 @@ namespace ReadCode
             this.dgv_VisionReadcode.BackgroundColor = System.Drawing.Color.White;
             this.dgv_VisionReadcode.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.Disable;
             this.dgv_VisionReadcode.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(46)))), ((int)(((byte)(56)))));
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
-            dataGridViewCellStyle5.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgv_VisionReadcode.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(46)))), ((int)(((byte)(56)))));
+            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
+            dataGridViewCellStyle9.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgv_VisionReadcode.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle9;
             this.dgv_VisionReadcode.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgv_VisionReadcode.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colCamIndex,
@@ -597,14 +596,14 @@ namespace ReadCode
             this.col_CheckQualifyJig,
             this.colStatusFinishLot});
             this.tbPanelBarcode.SetColumnSpan(this.dgv_VisionReadcode, 2);
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle6.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Trebuchet MS", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgv_VisionReadcode.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle10.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle10.Font = new System.Drawing.Font("Trebuchet MS", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgv_VisionReadcode.DefaultCellStyle = dataGridViewCellStyle10;
             this.dgv_VisionReadcode.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgv_VisionReadcode.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dgv_VisionReadcode.EnableHeadersVisualStyles = false;
@@ -613,17 +612,17 @@ namespace ReadCode
             this.dgv_VisionReadcode.Location = new System.Drawing.Point(4, 35);
             this.dgv_VisionReadcode.MultiSelect = false;
             this.dgv_VisionReadcode.Name = "dgv_VisionReadcode";
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgv_VisionReadcode.RowHeadersDefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgv_VisionReadcode.RowHeadersDefaultCellStyle = dataGridViewCellStyle11;
             this.dgv_VisionReadcode.RowHeadersVisible = false;
-            dataGridViewCellStyle8.BackColor = System.Drawing.Color.White;
-            this.dgv_VisionReadcode.RowsDefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle12.BackColor = System.Drawing.Color.White;
+            this.dgv_VisionReadcode.RowsDefaultCellStyle = dataGridViewCellStyle12;
             this.dgv_VisionReadcode.RowTemplate.Height = 28;
             this.dgv_VisionReadcode.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.dgv_VisionReadcode.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
@@ -690,9 +689,9 @@ namespace ReadCode
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.lblStatusConnectPLC);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(519, 4);
+            this.panel1.Location = new System.Drawing.Point(518, 4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(159, 24);
+            this.panel1.Size = new System.Drawing.Size(160, 24);
             this.panel1.TabIndex = 109;
             // 
             // label1

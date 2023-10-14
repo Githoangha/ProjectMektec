@@ -463,6 +463,32 @@ namespace ReadCode
             }
         }
 
+        #region Process Xóa file ảnh NG
+        void MainThreadDeleteImage()
+        {
+            Thread newThread = new Thread(ProcessDeleteImage);
+            newThread.IsBackground = true;
+            newThread.Start();
+        }
+
+        void ProcessDeleteImage()
+        {
+            while (c_varGolbal.IsRun)
+            {
+                try
+                {
+                    string Path = @"D:\\9999.SaveImage_Missing_NoRead";
+
+                }
+                catch(Exception ex)
+                {
+
+                }
+            }
+        }
+
+        #endregion
+
         #region Vision Read Barcode
         private int Step_ReadCode = 0;
         public static int oldPosition = 0;
@@ -489,6 +515,7 @@ namespace ReadCode
         bool Bit_Trigger_Default;
         bool checkNoLock = false;
         bool checkQualifyjig = false;
+        bool CheckMixLot = false;
         IEnumerable<IGrouping<string, dataVision>> List_DoubleCode;
         List<string> ListCheckData56 = new List<string>();
         int idUsingFVI = 0;
@@ -1059,20 +1086,28 @@ namespace ReadCode
                                         }
                                     }
                                 }
-                                ListCheckData56 = CheckHaveDataPlasma(lst_dataVision);
-                                List_DoubleCode = lst_dataVision.FindAll(x => !x.PcsBarcode.Contains(c_varGolbal.NoReadString) && !x.PcsBarcode.Contains(c_varGolbal.Missing))
-                                                    .GroupBy(x => x.PcsBarcode).Where(g => g.Count() >= 2);
-                                if (List_DoubleCode.Count() > 0)
+                                CheckMixLot = CheckDifferentLot(lst_dataVision, c_varGolbal.LotID);
+                                if (CheckMixLot)
                                 {
-                                    foreach (var item in List_DoubleCode)
+
+                                }
+                                else
+                                {
+                                    ListCheckData56 = CheckHaveDataPlasma(lst_dataVision);
+                                    List_DoubleCode = lst_dataVision.FindAll(x => !x.PcsBarcode.Contains(c_varGolbal.NoReadString) && !x.PcsBarcode.Contains(c_varGolbal.Missing))
+                                                        .GroupBy(x => x.PcsBarcode).Where(g => g.Count() >= 2);
+                                    if (List_DoubleCode.Count() > 0)
                                     {
-                                        var lst_Item = item.ToList();
-                                        foreach (var kq in lst_Item)
+                                        foreach (var item in List_DoubleCode)
                                         {
-                                            int index = lst_dataVision.FindIndex(x => x.ID == kq.ID);
-                                            var list_Another = lst_Item.FindAll(x => x.ID != kq.ID).Select(x => x.ID);
-                                            string str_add = string.Join("=", list_Another);
-                                            lst_dataVision[index].PcsIndex += "=" + str_add;
+                                            var lst_Item = item.ToList();
+                                            foreach (var kq in lst_Item)
+                                            {
+                                                int index = lst_dataVision.FindIndex(x => x.ID == kq.ID);
+                                                var list_Another = lst_Item.FindAll(x => x.ID != kq.ID).Select(x => x.ID);
+                                                string str_add = string.Join("=", list_Another);
+                                                lst_dataVision[index].PcsIndex += "=" + str_add;
+                                            }
                                         }
                                     }
                                 }
@@ -1113,13 +1148,20 @@ namespace ReadCode
 
                             try
                             {
-                                if (ListCheckData56.Count > 0)
+                                if (ListCheckData56.Count > 0 || CheckMixLot==true )
                                 {
-                                    string strJoin = string.Join("\r\n", ListCheckData56);
-                                    new frm_ShowDialog(frm_ShowDialog.Icon_Show.Error, $"Đã có những Pcs đã upload data plasma:\r\n {strJoin}").ShowDialog();
-                                    //PC Send To PLC: Error
-                                    PLC_Fx5.SetSingleBit("M30", true);
-                                    //log.Debug($"Result:_____NG______");
+                                    if (CheckMixLot)
+                                    {
+                                        new frm_ShowDialog(frm_ShowDialog.Icon_Show.Error, $"Các Pcs trong Jig khác Lot hiện tại").ShowDialog();
+                                    }
+                                    if(ListCheckData56.Count > 0)
+                                    {
+                                        string strJoin = string.Join("\r\n", ListCheckData56);
+                                        new frm_ShowDialog(frm_ShowDialog.Icon_Show.Error, $"Đã có những Pcs đã upload data plasma:\r\n {strJoin}").ShowDialog();
+                                        //PC Send To PLC: Error
+                                        PLC_Fx5.SetSingleBit("M30", true);
+                                        //log.Debug($"Result:_____NG______");
+                                    }
                                     this.Invoke(new MethodInvoker(delegate
                                     {
                                         ShowResultProcessReadCode("NG");
@@ -1765,10 +1807,14 @@ namespace ReadCode
                     FinishLot.ktLot = true;
                     FinishLot.Time = DateTime.Now;
                 }
+                else
+                {
+                    FinishLot.ktLot = false;
+                }
             }
             else
             {
-                FinishLot.ktLot = false;
+                
             }
             switch (result)
             {
@@ -1937,6 +1983,7 @@ namespace ReadCode
         }
         #endregion
 
+        #region Process Reconnect PLC
         Thread _run_Auto, _reconnect_PLC;
         void Thread_Run_Auto()
         {
@@ -2042,11 +2089,16 @@ namespace ReadCode
             }
         }
 
+        #endregion
+
         private void BtnAn_Click(object sender, EventArgs e)
         {
             WindowState = FormWindowState.Minimized;
         }
 
+
+
+        #region Hiển thị data theo trạng thái
         private void dgv_VisionReadcode_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             e.CellStyle.BackColor = Color.White;
@@ -2141,55 +2193,8 @@ namespace ReadCode
                 }
 
             }
-        }
-        List<Result> lstResult = new List<Result>();
-        private void lbReadCodePCS_Click(object sender, EventArgs e)
-        {
-            btnReset.PerformClick();
-            for (int i = 0; i < lst_CameraReader.Count; i++)
-            {
-                if (!lst_CameraReader[i]._IsConected)
-                {
-                    lst_CameraReader[i].ConnectCamera();
-                }
-                else
-                {
-                    lst_CameraReader[i].DisconnectCamera();
-                    Thread.Sleep(100);
-                    lst_CameraReader[i].ConnectCamera();
-                }
-                // if a device not conneced -> Disconnect all device 
-                if (!lst_CameraReader[i]._IsConected)
-                {
-                    DisconnectAllDevice();
-
-                    return;
-                }
-            }
-            Thread.Sleep(100);
-            oldPosition = 0;
-            lst_dataVision.Clear();
-            for (int i = 0; i < lstResult.Count; i++)
-            {
-                foreach (Code item in lstResult[i].ListData)
-                {
-                    dataVision infoVision = new dataVision();
-                    infoVision.CamIndex = item.CamIndex.ToString();
-                    infoVision.PcsIndex = item.IDRegion.ToString();
-                    infoVision.PcsBarcode = item.Content;
-                    infoVision.TagJigNonePCS = code_TagJigNonePCS;
-                    infoVision.TagJigHavePCS = code_TagJigHavePCS;
-                    c_varGolbal.List_DataCode.Add(item.Content);
-                    lst_dataVision.Add(infoVision);
-                    if (infoVision.PcsBarcode.ToUpper() == "NOREAD")
-                    {
-                        _flag_OK_NG = false;
-                    }
-                }
-            }
-            lstResult.Clear();
-            Task.Factory.StartNew(dgv_ShowInfoVision);
-        }
+        } 
+        #endregion
 
         private void chkSkipFVI_CheckedChanged(object sender, EventArgs e)
         {
@@ -2202,37 +2207,60 @@ namespace ReadCode
             c_varGolbal.StaffID = "HA";
             c_varGolbal.MPN = "MPN_TEST";
             c_varGolbal.LotID = "1234";
-            List<dataReadcode> lst = new List<dataReadcode>();
+            List<dataReadcode> lstDataReadcode = new List<dataReadcode>();
             for (int i = 0; i < 1; i++)
             {
                 dataReadcode dataReadCode = new dataReadcode();
                 dataReadCode.TagJig1 = $"Jig_1";
                 dataReadCode.TagJig2 = $"Jig_2";
-                dataReadCode.PcsBarcode = $"AAA,BBB,CCC,DDD,EEE,FFF,GGG,HHH,III";
+                dataReadCode.PcsBarcode = $"AAA,BBB,CCC,DDD,EEE,FFF,GGG,HHH,III,{c_varGolbal.Missing},{c_varGolbal.Missing},{c_varGolbal.NoReadString},{c_varGolbal.NoReadString}";
                 dataReadCode.DateTimeIn = "Thời gian Jig vào";
                 dataReadCode.FinishLot = "YES";
                 dataReadCode.Status = "OK";
-                lst.Add(dataReadCode);
+                lstDataReadcode.Add(dataReadCode);
             }
 
-            //List<dataVision> lst = new List<dataVision>();
-            //for (int i = 0; i < 40; i++)
-            //{
-            //    dataVision infoVision = new dataVision();
-            //    infoVision.ID = i + 1;
-            //    infoVision.CamIndex = 1 + "";
-            //    infoVision.PcsIndex = i + 1 + "";
-            //    infoVision.PcsBarcode = $"ABCD{i + 10}MN";
-            //    infoVision.TagJigNonePCS = "JigNonePCS";
-            //    infoVision.TagJigHavePCS = "JigHavePCS";
-            //    infoVision.statusICT = true; //HA_ADD
-            //    lst.Add(infoVision);
-            //}
+            List<dataVision> lstDataVision = new List<dataVision>();
+            for (int i = 0; i < 10; i++)
+            {
+                dataVision infoVision = new dataVision();
+                infoVision.ID = i + 1;
+                infoVision.CamIndex = 1 + "";
+                infoVision.PcsIndex = i + 1 + "";
+                if (i % 2 == 0)
+                {
+                    infoVision.PcsBarcode = c_varGolbal.Missing;
+                }
+                else
+                {
+                    infoVision.PcsBarcode = c_varGolbal.NoReadString;
+                }
+
+                infoVision.TagJigNonePCS = "JigNonePCS";
+                infoVision.TagJigHavePCS = "JigHavePCS";
+                infoVision.statusICT = true; //HA_ADD
+                lstDataVision.Add(infoVision);
+            }
+            int lenght = lstDataVision[lstDataVision.Count - 1].ID;
+            for (int i = lenght; i < lenght + 6; i++)
+            {
+                dataVision infoVision = new dataVision();
+                infoVision.ID = i + 1;
+                infoVision.CamIndex = 1 + "";
+                infoVision.PcsIndex = i + 1 + "";
+                infoVision.PcsBarcode = $"ABCD{i + 10}MN";
+                infoVision.TagJigNonePCS = "JigNonePCS";
+                infoVision.TagJigHavePCS = "JigHavePCS";
+                infoVision.statusICT = true; //HA_ADD
+                lstDataVision.Add(infoVision);
+            }
+
+            string Pcs = lstDataVision.FirstOrDefault(x => !x.PcsBarcode.Contains(c_varGolbal.NoReadString) && !x.PcsBarcode.Contains(c_varGolbal.Missing)).PcsBarcode;
             //MessageBox.Show("HAHAHAHA", "", MessageBoxButtons.OK, MessageBoxIcon.Error,MessageBoxDefaultButton.Button1,MessageBoxOptions.DefaultDesktopOnly);
             //c_varGolbal.StaffID = "HA";
             //c_varGolbal.MPN = "MPN_TEST";
             //c_varGolbal.LotID = "1234";
-            Upload_DB_Excel(lst);
+            Upload_DB_Excel(lstDataReadcode);
             //this.Invoke(new MethodInvoker(delegate
             //{
             //    // Hiển thị dữ liệu lên data grid view plasma
@@ -2304,6 +2332,8 @@ namespace ReadCode
 
         #endregion
 
+
+        #region Các hàm check dữ liệu với server MMCV
         public List<string> CheckHaveDataPlasma(List<dataVision> listPcs)
         {
 
@@ -2311,7 +2341,7 @@ namespace ReadCode
             List<string> data = new List<string>();
             foreach (dataVision item in listPcs)
             {
-                data.Add($"'{item.PcsBarcode}'");
+                data.Add($"{item.PcsBarcode}");
             }
             #region dùng thư viện nhà máy
             try
@@ -2327,7 +2357,33 @@ namespace ReadCode
                 Result.Add(GlobVar.Error56);
             }
             return Result;
+        } 
+
+        public bool CheckDifferentLot(List<dataVision>lst,string LotNo)
+        {
+            try
+            {
+                string result = "";
+                string Pcs = lst.FirstOrDefault(x => !x.PcsBarcode.Contains(c_varGolbal.NoReadString) && !x.PcsBarcode.Contains(c_varGolbal.Missing)).PcsBarcode;
+                Plasma56 mmcv = new Plasma56();
+                result=mmcv.CheckMixLot(LotNo, Pcs);
+                if (result.ToUpper().Contains("OK"))
+                {
+                    return false;
+                }
+                else
+                {
+                    //Lib.ShowError(result);
+                    return true;
+                }
+            }
+            catch(Exception ex)
+            {
+                Lib.ShowError($"Lỗi khi kiểm tra Mix Lot\r\n{ex.ToString()}");
+                return true;
+            }
         }
+        #endregion
         private void dgv_VisionReadcode_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Control && e.KeyCode == Keys.C)
