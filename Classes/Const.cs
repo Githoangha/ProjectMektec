@@ -7,6 +7,7 @@ namespace LineGolden_PLasma
 {
     public static class ColName
     {
+        public static int MyProperty { get; set; }     
         public static string NameTag = "NameTag";
     }
 
