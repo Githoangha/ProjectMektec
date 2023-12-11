@@ -312,7 +312,7 @@ namespace LineGolden_PLasma
 
             try
             {
-                using (SQLiteConnection con = new SQLiteConnection(@"Data Source = \\" + DBMachine + "\\DB_ReadCode.db;Version=3;"))
+                using (SQLiteConnection con = new SQLiteConnection(@"Data Source = " + DBMachine + "\\DB_ReadCode.db;Version=3;"))
                 {
                     try
                     {
@@ -326,7 +326,6 @@ namespace LineGolden_PLasma
                     }
                     catch (Exception ex)
                     {
-
                         throw;
                     }
                     finally
@@ -345,7 +344,7 @@ namespace LineGolden_PLasma
         {
             try
             {
-                using (SQLiteConnection con = new SQLiteConnection(@"Data Source = \\" + connectdb + "\\DB_ReadCode.db;Version=3;"))
+                using (SQLiteConnection con = new SQLiteConnection(@"Data Source = " + connectdb + "\\DB_ReadCode.db;Version=3;"))
                 {
                     try
                     {
@@ -641,6 +640,30 @@ namespace LineGolden_PLasma
             }
             catch (Exception ex)
             {
+                MessageBox.Show(ex.ToString());
+            }
+
+            return dt;
+        }
+
+        public static DataTable GetTableData(string sqlQuery, string FilePathServer,ref bool status)
+        {
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
+            try
+            {
+                SQLiteConnection con = new SQLiteConnection($"Data Source={FilePathServer};Version=3;");
+                SQLiteDataAdapter da = new SQLiteDataAdapter(sqlQuery, con);
+
+                con.Open();
+                da.Fill(ds);
+                dt = ds.Tables[0];
+                con.Close();
+                status = true;
+            }
+            catch (Exception ex)
+            {
+                status = false;
                 MessageBox.Show(ex.ToString());
             }
 

@@ -122,16 +122,16 @@ namespace LineGolden_PLasma
         {
             Number = number;
             LinkDB = link;
-            isUse = isuse;
+            this.isUse = isuse;
         }
         public void SetValue(string link, bool isuse)
         {
             LinkDB = link;
-            isUse = isuse;
+            this.isUse = isuse;
         }
         public void SetValue(bool isuse)
         {
-            isUse = isuse;
+            this.isUse = isuse;
         }
     }
 }

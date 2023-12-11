@@ -88,9 +88,6 @@ namespace LineGolden_PLasma
         /// <param name="e"></param>
         private void FrmMain_Load(object sender, EventArgs e)
         {
-            
-            FrmImageLoad ImgLoad = new FrmImageLoad();
-
             GlobVar.LockEvent = true;
             c_varGolbal.str_ConnectDBConffig = "Data Source = " + Application.StartupPath + "\\Config\\DB_ConfigDevice.db;Version=3;";
             c_varGolbal.List_LinkDB = new List<PathFile>();
@@ -225,7 +222,25 @@ namespace LineGolden_PLasma
             // --------------------------------------------------------------------------------------------------------------------//
             #endregion
 
-            
+            #region Check version dll MMCV
+            try
+            {
+                Plasma56 mmcv = new Plasma56();
+                string result = mmcv.CheckVersion();
+                if (!result.ToUpper().Contains("OK"))
+                {
+                    Lib.ShowError(result);
+                    Application.Exit();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Lib.ShowError("Exception", ex);
+                Application.Exit();
+            }
+
+            #endregion
 
             lblStauts_MachineName_Version.Text = c_varGolbal.str_MachineVersion;
             //
@@ -489,6 +504,12 @@ namespace LineGolden_PLasma
                 {
                     CompleteStart = false;
                     new Frm_ShowDialog(Frm_ShowDialog.Icon_Show.Warning, "Vui lòng điền StaffID !").ShowDialog();
+                    return;
+                }
+                if (txt_StaffID.Text.Trim().Length != 6)
+                {
+                    CompleteStart = false;
+                    Lib.ShowError("Hãy điền đúng 6 kí tự ở cột StaffID !");
                     return;
                 }
                 if (!chkLinkDB_ReadCode1.Checked && !chkLinkDB_ReadCode2.Checked && c_varGolbal.QtyBeforePlasma == 2)
@@ -773,6 +794,7 @@ namespace LineGolden_PLasma
 
                 item.clearDisplay();
             }
+
         }
 
         void Stop_Allthread()
@@ -1124,6 +1146,7 @@ namespace LineGolden_PLasma
                 if (c_varGolbal.List_LinkDB[i].Number == 1)
                 {
                     c_varGolbal.List_LinkDB[i].SetValue(chkLinkDB_ReadCode1.Checked);
+                    //Lib.ShowInfor($"Link:{c_varGolbal.List_LinkDB[i].LinkDB}\r\nNumber:{c_varGolbal.List_LinkDB[i].Number}\r\nStatus:{c_varGolbal.List_LinkDB[i].isUse}");//Test PM
                 }
             }
         }
@@ -1137,6 +1160,7 @@ namespace LineGolden_PLasma
                 if (c_varGolbal.List_LinkDB[i].Number == 2)
                 {
                     c_varGolbal.List_LinkDB[i].SetValue(chkLinkDB_ReadCode2.Checked);
+                    //Lib.ShowInfor($"Link:{c_varGolbal.List_LinkDB[i].LinkDB}\r\nNumber:{c_varGolbal.List_LinkDB[i].Number}\r\nStatus:{c_varGolbal.List_LinkDB[i].isUse}");//Test PM
                 }
             }
         }

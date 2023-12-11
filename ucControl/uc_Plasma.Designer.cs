@@ -57,6 +57,7 @@ namespace LineGolden_PLasma
             this.lb_Status_PLC = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.btnShowLog = new System.Windows.Forms.Button();
+            this.lbStatusUpload = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grdViewTag)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.grvViewTag)).BeginInit();
@@ -71,7 +72,7 @@ namespace LineGolden_PLasma
             this.lb_Status_Barcode.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lb_Status_Barcode.Font = new System.Drawing.Font("Segoe UI", 12.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lb_Status_Barcode.ForeColor = System.Drawing.Color.Black;
-            this.lb_Status_Barcode.Location = new System.Drawing.Point(1031, 4);
+            this.lb_Status_Barcode.Location = new System.Drawing.Point(381, 4);
             this.lb_Status_Barcode.Name = "lb_Status_Barcode";
             this.lb_Status_Barcode.Size = new System.Drawing.Size(99, 25);
             this.lb_Status_Barcode.TabIndex = 87;
@@ -342,7 +343,7 @@ namespace LineGolden_PLasma
             // 
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Segoe UI", 12.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(945, 5);
+            this.label4.Location = new System.Drawing.Point(295, 5);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(80, 23);
             this.label4.TabIndex = 106;
@@ -382,11 +383,23 @@ namespace LineGolden_PLasma
             this.btnShowLog.UseVisualStyleBackColor = true;
             this.btnShowLog.Visible = false;
             // 
+            // lbStatusUpload
+            // 
+            this.lbStatusUpload.AutoSize = true;
+            this.lbStatusUpload.Font = new System.Drawing.Font("Segoe UI", 12.75F, System.Drawing.FontStyle.Bold);
+            this.lbStatusUpload.Location = new System.Drawing.Point(595, 6);
+            this.lbStatusUpload.Name = "lbStatusUpload";
+            this.lbStatusUpload.Size = new System.Drawing.Size(272, 23);
+            this.lbStatusUpload.TabIndex = 109;
+            this.lbStatusUpload.Text = "Đang upload dữ liệu lên server...";
+            this.lbStatusUpload.Visible = false;
+            // 
             // uc_Plasma
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
+            this.Controls.Add(this.lbStatusUpload);
             this.Controls.Add(this.btnShowLog);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label4);
@@ -441,5 +454,6 @@ namespace LineGolden_PLasma
         private System.Windows.Forms.Label lb_Status_PLC;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button btnShowLog;
+        private System.Windows.Forms.Label lbStatusUpload;
     }
 }
