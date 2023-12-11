@@ -6,7 +6,8 @@ using System.Text;
 namespace LineGolden_PLasma
 {
     public static class ColName
-    {
+    {   
+        public static int testttt { get; set; }
         public static string NameTag = "NameTag";
     }
 
