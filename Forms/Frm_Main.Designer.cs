@@ -60,7 +60,7 @@ namespace LineGolden_PLasma
             this.tbPanelPlasma = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.lbViewTime = new System.Windows.Forms.Label();
-            this.txtStatus = new System.Windows.Forms.Label();
+            this.lbStatus = new System.Windows.Forms.Label();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.gcProgram = new DevExpress.XtraEditors.GroupControl();
             this.chkLinkDB_ReadCode2 = new System.Windows.Forms.CheckBox();
@@ -512,7 +512,7 @@ namespace LineGolden_PLasma
             // 
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(46)))), ((int)(((byte)(56)))));
             this.panel1.Controls.Add(this.lbViewTime);
-            this.panel1.Controls.Add(this.txtStatus);
+            this.panel1.Controls.Add(this.lbStatus);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel1.Location = new System.Drawing.Point(0, 828);
             this.panel1.Name = "panel1";
@@ -531,17 +531,19 @@ namespace LineGolden_PLasma
             this.lbViewTime.TabIndex = 4;
             this.lbViewTime.Text = "19/04/22 - 23:04:33";
             // 
-            // txtStatus
+            // lbStatus
             // 
-            this.txtStatus.AutoSize = true;
-            this.txtStatus.BackColor = System.Drawing.Color.Transparent;
-            this.txtStatus.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtStatus.ForeColor = System.Drawing.Color.White;
-            this.txtStatus.Location = new System.Drawing.Point(3, 9);
-            this.txtStatus.Name = "txtStatus";
-            this.txtStatus.Size = new System.Drawing.Size(198, 15);
-            this.txtStatus.TabIndex = 3;
-            this.txtStatus.Text = "Program running status display here";
+            this.lbStatus.AutoSize = true;
+            this.lbStatus.BackColor = System.Drawing.Color.Transparent;
+            this.lbStatus.Dock = System.Windows.Forms.DockStyle.Left;
+            this.lbStatus.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lbStatus.ForeColor = System.Drawing.Color.White;
+            this.lbStatus.Location = new System.Drawing.Point(0, 0);
+            this.lbStatus.Margin = new System.Windows.Forms.Padding(3);
+            this.lbStatus.Name = "lbStatus";
+            this.lbStatus.Size = new System.Drawing.Size(337, 25);
+            this.lbStatus.TabIndex = 3;
+            this.lbStatus.Text = "Program running status display here";
             // 
             // tableLayoutPanel1
             // 
@@ -757,7 +759,7 @@ namespace LineGolden_PLasma
         private System.Windows.Forms.TableLayoutPanel tbPanelPlasma;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label lbViewTime;
-        private System.Windows.Forms.Label txtStatus;
+        private System.Windows.Forms.Label lbStatus;
         private DevExpress.XtraEditors.GroupControl gcInfomation;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Button btnReset;

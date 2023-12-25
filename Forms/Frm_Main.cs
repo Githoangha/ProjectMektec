@@ -437,249 +437,329 @@ namespace LineGolden_PLasma
         /// </summary>
         private void DisplayStatusMachine(string status)
         {
-            this.Invoke(new MethodInvoker(delegate
-            {
-                txtStatus.Text = status;
-            }));
+            Lib.ShowLabelResult(Color.Transparent, lbStatus, status);
         }
         // --------------------------------------------------------------------------------------------------------------------//
         #endregion
 
-        #region Click RUN
+        #region Click RUN PROCESS AUTO
         //
         private void btnRunOrStop_Click(object sender, EventArgs e)
         {
-            if (CompleteStart) return;
-
-            c_varGolbal.IsRun = true;  //Khi start
-           
-
-            LoadTriggerPLC();
-            CompleteStart = true;
-            if (Status_Machine == "STOP")
+            try
             {
+                if (CompleteStart) return;
+                LoadTriggerPLC();
+                CompleteStart = true;
+                if (Status_Machine == "STOP")
+                {
 
-                #region KIỂM TRA CÁC ĐIỀU KIỆN ĐỂ START CHƯƠNG TRÌNH
-                // KIỂM TRA CÁC ĐIỀU KIỆN ĐỂ START CHƯƠNG TRÌNH
-                if (cboProgram.SelectedValue == null)
-                {
-                    CompleteStart = false;
-                    new Frm_ShowDialog(Frm_ShowDialog.Icon_Show.Warning, "Vui lòng lựa chọn Program !").ShowDialog();
-                    return;
-                }
-                if (txt_LineID.Text == "Missing" || txt_LineID.Text == "" || txt_LineID.Text == null)
-                {
-                    CompleteStart = false;
-                    new Frm_ShowDialog(Frm_ShowDialog.Icon_Show.Warning, "Vui lòng điền LineID !").ShowDialog();
-                    return;
-                }
-                if (txt_DeviceID.Text == "Missing" || txt_DeviceID.Text == "" || txt_DeviceID.Text == null)
-                {
-                    CompleteStart = false;
-                    new Frm_ShowDialog(Frm_ShowDialog.Icon_Show.Warning, "Vui lòng điền DeviceID !").ShowDialog();
-                    return;
-                }
-                if (txt_LotID.Text == "Missing" || txt_LotID.Text == "" || txt_LotID.Text == null)
-                {
-                    CompleteStart = false;
-                    new Frm_ShowDialog(Frm_ShowDialog.Icon_Show.Warning, "Vui lòng điền LotID !").ShowDialog();
-                    return;
-                }
-                if (txt_StaffID.Text == "Missing" || txt_StaffID.Text == "" || txt_StaffID.Text == null)
-                {
-                    CompleteStart = false;
-                    new Frm_ShowDialog(Frm_ShowDialog.Icon_Show.Warning, "Vui lòng điền StaffID !").ShowDialog();
-                    return;
-                }
-                if (!chkLinkDB_ReadCode1.Checked && !chkLinkDB_ReadCode2.Checked && c_varGolbal.QtyBeforePlasma == 2)
-                {
-                    CompleteStart = false;
-                    new Frm_ShowDialog(Frm_ShowDialog.Icon_Show.Warning, "Vui lòng chọn ít nhất 1 đường dẫn file ").ShowDialog();
-                    return;
-                }
-                // --------------------------------------------------------------------------------------------------------------------//
-                #endregion
-
-                #region KIỂM TRA KẾT NỐI SERVER NHÀ MÁY
-                txtStatus.Text = "Get datas of MPN from Sever MMCV";
-                if (c_varGolbal.IsUploadPlasma)
-                {
-                    try
+                    #region KIỂM TRA CÁC ĐIỀU KIỆN ĐỂ START CHƯƠNG TRÌNH
+                    // KIỂM TRA CÁC ĐIỀU KIỆN ĐỂ START CHƯƠNG TRÌNH
+                    if (cboProgram.SelectedValue == null)
                     {
-                        c_varGolbal.LotID = txt_LotID.Text.Trim();
-                        txt_MPN.Text = MMCV_DBGetMPN.GetMPN(c_varGolbal.LotID);
-                        c_varGolbal.MPN = txt_MPN.Text.Trim();
+                        new Frm_ShowDialog(Frm_ShowDialog.Icon_Show.Warning, "Vui lòng lựa chọn Program !").ShowDialog();
+                        return;
                     }
-                    catch (Exception Ex)
+                    if (txt_LineID.Text == "Missing" || txt_LineID.Text == "" || txt_LineID.Text == null)
                     {
-                        CompleteStart = false;
-                        new Frm_ShowDialog(Frm_ShowDialog.Icon_Show.Error, $"Error Get MPN from Sever \r {Ex}").ShowDialog();
+                        new Frm_ShowDialog(Frm_ShowDialog.Icon_Show.Warning, "Vui lòng điền LineID !").ShowDialog();
+                        return;
                     }
-                }
-                if (txt_MPN.Text.Trim() == "Missing" || string.IsNullOrWhiteSpace(txt_MPN.Text.Trim()) || string.IsNullOrEmpty(txt_MPN.Text.Trim()))
-                {
-                    CompleteStart = false;
-                    new Frm_ShowDialog(Frm_ShowDialog.Icon_Show.Warning, "Please input the MPN !", new Font("Segoe UI", 13f, FontStyle.Bold)).ShowDialog();
-                    return;
-                }
-                //// --------------------------------------------------------------------------------------------------------------------//
-                #endregion
+                    if (txt_DeviceID.Text == "Missing" || txt_DeviceID.Text == "" || txt_DeviceID.Text == null)
+                    {
+                        new Frm_ShowDialog(Frm_ShowDialog.Icon_Show.Warning, "Vui lòng điền DeviceID !").ShowDialog();
+                        return;
+                    }
+                    if (txt_LotID.Text == "Missing" || string.IsNullOrEmpty(txt_LotID.Text.Trim()) || string.IsNullOrWhiteSpace(txt_LotID.Text.Trim()))
+                    {
+                        new Frm_ShowDialog(Frm_ShowDialog.Icon_Show.Warning, "Vui lòng điền LotID !").ShowDialog();
+                        return;
+                    }
+                    if (txt_StaffID.Text == "Missing" || string.IsNullOrEmpty(txt_StaffID.Text.Trim()) || string.IsNullOrWhiteSpace(txt_StaffID.Text.Trim()))
+                    {
+                        new Frm_ShowDialog(Frm_ShowDialog.Icon_Show.Warning, "Vui lòng điền StaffID !").ShowDialog();
+                        return;
+                    }
+                    if (txt_StaffID.Text.Length != 6)
+                    {
+                        Lib.ShowError("Hãy điền đúng 6 kí tự ở staffID");
+                        return;
+                    }
+                    if (!chkLinkDB_ReadCode1.Checked && !chkLinkDB_ReadCode2.Checked && c_varGolbal.QtyBeforePlasma == 2)
+                    {
+                        new Frm_ShowDialog(Frm_ShowDialog.Icon_Show.Warning, "Vui lòng chọn ít nhất 1 đường dẫn file ").ShowDialog();
+                        return;
+                    }
+                    // --------------------------------------------------------------------------------------------------------------------//
+                    #endregion
 
-                #region Kết nối Server local Boxing
-                //KẾT NỐI SERVER LOCAL BOXING 
+                    #region KIỂM TRA KẾT NỐI SERVER NHÀ MÁY
+                    lbStatus.Text = "Get datas of MPN from Sever MMCV";
+                    if (c_varGolbal.IsUploadPlasma)
+                    {
+                        try
+                        {
+                            c_varGolbal.LotID = txt_LotID.Text.Trim();
+                            txt_MPN.Text = MMCV_DBGetMPN.GetMPN(c_varGolbal.LotID);
+                            c_varGolbal.MPN = txt_MPN.Text.Trim();
+                        }
+                        catch (Exception Ex)
+                        {
+                            new Frm_ShowDialog(Frm_ShowDialog.Icon_Show.Error, $"Error Get MPN from Sever \r {Ex}").ShowDialog();
+                        }
+                    }
+                    if (txt_MPN.Text.Trim() == "Missing" || string.IsNullOrWhiteSpace(txt_MPN.Text.Trim()) || string.IsNullOrEmpty(txt_MPN.Text.Trim()))
+                    {
+                        new Frm_ShowDialog(Frm_ShowDialog.Icon_Show.Warning, "Please input the MPN !", new Font("Segoe UI", 13f, FontStyle.Bold)).ShowDialog();
+                        return;
+                    }
+                    //// --------------------------------------------------------------------------------------------------------------------//
+                    #endregion
+
+                    #region Kết nối Server local Boxing
+                    //KẾT NỐI SERVER LOCAL BOXING 
                     try
                     {
                         bool chkExist = false;
                         bool chkTimeOver = Lib.ExecuteWithTimeLimit(TimeSpan.FromMilliseconds(5000), () => { chkExist = File.Exists(GlobVar.PathFileBoxing); });
                         if (!chkExist || !chkTimeOver)
                         {
-                            CompleteStart = false;
                             Lib.ShowError($"Don't connect to Server local Boxing  {GlobVar.PathFileBoxing} ");
                             return;
                         }
                     }
                     catch (Exception Ex)
                     {
-                        CompleteStart = false;
                         Lib.ShowError(Ex.ToString());
                         return;
                     }
                     // --------------------------------------------------------------------------------------------------------------------//
-                #endregion
+                    #endregion
 
-                #region Xác nhận đổi Lot và Backup data plasma không thuộc Lot hiện tại
-
-                DataTable tableBoxing = Support_SQL.GetTableData($"SELECT * FROM ParameterCurrent WHERE ID=1;", GlobVar.PathFileBoxing);
-                if (tableBoxing.Rows.Count > 0)
-                {
-                    
-                    WaitWndFun frm_Wait_Upload = new WaitWndFun();
-                    try
+                    #region Kết nối với server local fvi hoặc before plasma
+                    if (c_varGolbal.UseMachine == 1)
                     {
-                        string LotCurrentBoxing = Lib.ToString(tableBoxing.Rows[0]["LotID"]);
-                        if (!c_varGolbal.LotID.Contains(LotCurrentBoxing))
+                        #region KẾT NỐI SERVER LOCAL FVI
+                        //KẾT NỐI SERVER LOCAL FVI
+                        try
                         {
-                            CompleteStart = false;
-                            new Frm_ShowDialog(Frm_ShowDialog.Icon_Show.Error, $"LotID:({c_varGolbal.LotID}) hiện tại đang khác mã LotID:({LotCurrentBoxing}) ở công đoạn Boxing\r\n" +
-                                                                               $"Hãy tiến hành đổi mã Lot và start tại công đoạn boxing trước").ShowDialog();
+                            bool chkExist = false;
+                            bool chkTimeOver = Lib.ExecuteWithTimeLimit(TimeSpan.FromMilliseconds(5000), () => { chkExist = File.Exists(c_varGolbal.str_ConnectDBReadCode_FVI); });
+                            if (!chkExist || !chkTimeOver)
+                            {
+
+                                Lib.ShowError($"Don't connect to Server local FVI  {c_varGolbal.str_ConnectDBReadCode_FVI} ");
+                                return;
+                            }
+                        }
+                        catch (Exception Ex)
+                        {
+                            Lib.ShowError(Ex.ToString());
                             return;
                         }
-                        DataTable dtCheck = Support_SQL.GetTableDataPlasma($"Select *From Plasma WHERE LotID NOT IN ('{c_varGolbal.LotID}')");
-                        if (dtCheck.Rows.Count > 0)
+                        // --------------------------------------------------------------------------------------------------------------------// 
+                        #endregion
+                    }
+                    else if (c_varGolbal.UseMachine == 2)
+                    {
+                        #region KẾT NỐI SERVER LOCAL BEFORE PLASMA
+                        //KẾT NỐI SERVER LOCAL BEFORE PLASMA 
+                        if (c_varGolbal.QtyBeforePlasma == 2)
+                        {
+                            try
+                            {
+                                foreach(var item in c_varGolbal.List_LinkDB)
+                                {
+                                    if (item.isUse)
+                                    {
+                                        bool chkExist = false;
+                                        bool chkTimeOver = Lib.ExecuteWithTimeLimit(TimeSpan.FromMilliseconds(5000), () => { chkExist = File.Exists(item.LinkDB); });
+                                        if (!chkExist || !chkTimeOver)
+                                        {
+
+                                            Lib.ShowError($"Don't connect to Server local BEFORE PLASMA  {item.LinkDB} ");
+                                            return;
+                                        }
+                                    }
+                                    
+                                }
+                                
+                            }
+                            catch (Exception Ex)
+                            {
+                                Lib.ShowError(Ex.ToString());
+                                return;
+                            }
+                        }
+                        else if (c_varGolbal.QtyBeforePlasma == 1)
+                        {
+                            try
+                            {
+                                bool chkExist = false;
+                                bool chkTimeOver = Lib.ExecuteWithTimeLimit(TimeSpan.FromMilliseconds(5000), () => { chkExist = File.Exists(c_varGolbal.str_ConnectDBReadCode_BeforePlasma1); });
+                                if (!chkExist || !chkTimeOver)
+                                {
+
+                                    Lib.ShowError($"Don't connect to Server local BEFORE PLASMA  {c_varGolbal.str_ConnectDBReadCode_BeforePlasma1} ");
+                                    return;
+                                }
+                            }
+                            catch (Exception Ex)
+                            {
+                                Lib.ShowError(Ex.ToString());
+                                return;
+                            }
+                        }
+                       
+                        // --------------------------------------------------------------------------------------------------------------------// 
+                        #endregion
+                    }
+
+                    #endregion
+
+                    #region Xác nhận đổi Lot và Backup data plasma không thuộc Lot hiện tại
+
+                    DataTable tableBoxing = Support_SQL.GetTableData($"SELECT * FROM ParameterCurrent WHERE ID=1 ;", GlobVar.PathFileBoxing);
+                    if (tableBoxing.Rows.Count > 0)
+                    {
+
+                        //WaitWndFun frm_Wait_Upload = new WaitWndFun();
+                        try
+                        {
+                            string LotCurrentBoxing = Lib.ToString(tableBoxing.Rows[0]["LotID"]);
+                            if (!c_varGolbal.LotID.Contains(LotCurrentBoxing))
+                            {
+                                new Frm_ShowDialog(Frm_ShowDialog.Icon_Show.Error, $"LotID:({c_varGolbal.LotID}) hiện tại đang khác mã LotID:({LotCurrentBoxing}) ở công đoạn Boxing\r\n" +
+                                                                                   $"Hãy tiến hành đổi mã Lot và start tại công đoạn boxing trước").ShowDialog();
+                                return;
+                            }
+                            DataTable dtCheck = Support_SQL.GetTableDataPlasma($"Select *From Plasma WHERE LotID NOT IN ('{c_varGolbal.LotID}');");
+                            if (dtCheck.Rows.Count > 0)
+                            {
+                                this.Invoke(new Action(delegate
+                                {
+                                    //if (frm_Wait_Upload != null) frm_Wait_Upload.Show(this, "Backup Data");
+                                    Lib.ShowLabelResult(Color.Orange, lbStatus, "Backup data...");
+                                    string insertAll = $"INSERT INTO BackUpPlasma SELECT *FROM Plasma WHERE LotID NOT IN ('{txt_LotID.Text.Trim()}') AND CompleteBoxing=1 ORDER BY ID ASC";
+                                    bool checkinsert = false;
+                                    do
+                                    {
+                                        if (Support_SQL.ExecuteQueryDBPlasma(insertAll) == 1)
+                                        {
+                                            checkinsert = true;
+                                        }
+                                    }
+                                    while (!checkinsert);
+                                    string deletePlasma = $"DELETE FROM Plasma WHERE LotID NOT IN ('{txt_LotID.Text.Trim()}') AND CompleteBoxing=1;";
+                                    Support_SQL.ExecuteScalarDBPlasma(deletePlasma);
+                                    Lib.ShowLabelResult(Color.Orange, lbStatus, "Backup data is Done");
+                                    //if (frm_Wait_Upload != null) frm_Wait_Upload.Close();
+                                }));
+                            }
+                        }
+                        catch (Exception ex)
                         {
                             this.Invoke(new Action(delegate
                             {
-                                if (frm_Wait_Upload != null) frm_Wait_Upload.Show(this, "Backup Data");
-
-                                string insertAll = $"INSERT INTO BackUpPlasma SELECT *FROM Plasma WHERE LotID NOT IN ('{txt_LotID.Text.Trim()}') ORDER BY ID ASC";
-                                bool checkinsert = false;
-                                do
-                                {
-                                    if (Support_SQL.ExecuteQueryDBPlasma(insertAll) == 1)
-                                    {
-                                        checkinsert = true;
-                                    }
-                                }
-                                while (!checkinsert);
-                                string deletePlasma = $"DELETE FROM Plasma WHERE LotID NOT IN ('{txt_LotID.Text.Trim()}')";
-                                Support_SQL.ExecuteScalarDBPlasma(deletePlasma);
-                                if (frm_Wait_Upload != null) frm_Wait_Upload.Close();
+                                //if (frm_Wait_Upload != null) frm_Wait_Upload.Close();
+                                Lib.ShowError(ex.ToString());
+                                return;
                             }));
+                        }
+                    }
+                    else
+                    {
+                        Lib.ShowError($"Kiểm tra kết nối Datalocal Boxing\r\n  {GlobVar.PathFileBoxing} ");
+                        return;
+                    }
+
+
+                    #endregion
+
+                    #region KẾT NỐI CAM BARCODE & PLC MÁY PLASMA
+                    // KẾT NỐI CAM BARCODE & PLC MÁY PLASMA
+                    c_varGolbal.IsRun = true;  //Khi start
+                    ConnectAllInPlasma();
+                    if (!c_varGolbal.IsRun)
+                    {
+                        DisconnectAllDevice();
+                        return; //khi mất kết nối CAM hoặc PLC thì sẽ return
+                    }
+
+                    // --------------------------------------------------------------------------------------------------------------------//
+                    #endregion
+
+                    
+
+                    #region KHỞI TẠO CHẠY CÁC LUỒNG ĐIỀU KHIỂN CHÍNH TRONG CHƯƠNG TRÌNH
+                    // KHỞI TẠO CHẠY CÁC LUỒNG ĐIỀU KHIỂN CHÍNH TRONG CHƯƠNG TRÌNH
+                    try
+                    {
+                        foreach (uc_Plasma item in Lst_Plasma)
+                        {
+                            item.InitValue();
+                            item.MainThreadDisplayDataPlasma();
+                            item.MainThreadReadTagPlasma();
+                            item.MainThreadUpdateDataPlasma();
+                            //item.MainThreadUploadDataWaiting();
                         }
                     }
                     catch (Exception ex)
                     {
-                        this.Invoke(new Action(delegate
-                        {
-                            CompleteStart = false;
-                            if (frm_Wait_Upload != null) frm_Wait_Upload.Close();
-                            Lib.ShowError(ex.ToString());
-                            return;
-                        }));
+                        DisconnectAllDevice();
+                        Stop_Allthread();
+                        return;
                     }
-                }
-                else
-                {
-                    Lib.ShowError($"Kiểm tra kết nối Datalocal Boxing\r\n  {GlobVar.PathFileBoxing} ");
-                    CompleteStart = false;
-                    return;
-                }
-                
+                    // --------------------------------------------------------------------------------------------------------------------//
+                    #endregion
 
-                #endregion
-
-                #region KẾT NỐI CAM BARCODE & PLC MÁY PLASMA
-                // KẾT NỐI CAM BARCODE & PLC MÁY PLASMA
-                ConnectAllInPlasma();
-                if (!c_varGolbal.IsRun)
-                {
-                    CompleteStart = false;
-                    DisconnectAllDevice();
-                    return; //khi mất kết nối CAM hoặc PLC thì sẽ return
-                }
-
-                // --------------------------------------------------------------------------------------------------------------------//
-                #endregion
-
-                #region KHỞI TẠO CHẠY CÁC LUỒNG ĐIỀU KHIỂN CHÍNH TRONG CHƯƠNG TRÌNH
-                // KHỞI TẠO CHẠY CÁC LUỒNG ĐIỀU KHIỂN CHÍNH TRONG CHƯƠNG TRÌNH
-                try
-                {
-                    foreach (uc_Plasma item in Lst_Plasma)
+                    btnRunOrStop.Text = "STOP";
+                    btnRunOrStop.BackColor = Color.Red;
+                    btnFormData.Enabled = false;
+                    btnChangeUser.Enabled = false;
+                    btnExit.Enabled = false;
+                    cboProgram.Enabled = false;
+                    txt_LotID.ReadOnly = true;
+                    txt_StaffID.ReadOnly = true;
+                    if (c_varGolbal.QtyBeforePlasma == 2)
                     {
-                        item.InitValue();
-                        item.MainThreadDisplayDataPlasma();
-                        item.MainThreadReadTagPlasma();
-                        item.MainThreadUpdateDataPlasma();
-                        //item.MainThreadUploadDataWaiting();
+                        chkLinkDB_ReadCode1.Enabled = false;
+                        chkLinkDB_ReadCode2.Enabled = false;
                     }
+                    Status_Machine = "RUN";
+                    DisplayStatusMachine("Running");
+                    QuyenSuDung();
                 }
-                catch (Exception ex)
+                else if (Status_Machine == "RUN")
                 {
-                    CompleteStart = false;
                     DisconnectAllDevice();
+                    c_varGolbal.IsRun = false; //khi Stop
+                    btnRunOrStop.Text = "RUN";
+                    btnRunOrStop.BackColor = Color.Green;
+                    Status_Machine = "STOP";
+                    btnExit.Enabled = true;
+                    btnFormData.Enabled = true;
+                    btnChangeUser.Enabled = true;
+                    cboProgram.Enabled = true;
+                    txt_LotID.ReadOnly = false;
+                    txt_StaffID.ReadOnly = false; ;
+                    DisplayStatusMachine("System Stop");
+                    if (c_varGolbal.QtyBeforePlasma == 2)
+                    {
+                        chkLinkDB_ReadCode1.Enabled = true;
+                        chkLinkDB_ReadCode2.Enabled = true;
+                    }
+                    QuyenSuDung();
                     Stop_Allthread();
-                    return;
                 }
-                // --------------------------------------------------------------------------------------------------------------------//
-                #endregion
-                btnRunOrStop.Text = "STOP";
-                btnRunOrStop.BackColor = Color.Red;
-                btnFormData.Enabled = false;
-                btnChangeUser.Enabled = false;
-                cboProgram.Enabled = false;
-                txt_LotID.ReadOnly = true;
-                txt_StaffID.ReadOnly = true;
-                if (c_varGolbal.QtyBeforePlasma == 2)
-                {
-                    chkLinkDB_ReadCode1.Enabled = false;
-                    chkLinkDB_ReadCode2.Enabled = false;
-                }
-                Status_Machine = "RUN";
-                DisplayStatusMachine("Running");
-                QuyenSuDung();
-                CompleteStart = false;
             }
-            else if (Status_Machine == "RUN")
+            catch (Exception)
             {
-                DisconnectAllDevice();
-                btnRunOrStop.Text = "RUN";
-                btnRunOrStop.BackColor = Color.Green;
-                Status_Machine = "STOP";
-                btnFormData.Enabled = true;
-                btnChangeUser.Enabled = true;
-                cboProgram.Enabled = true;
-                txt_LotID.ReadOnly = false;
-                txt_StaffID.ReadOnly = false; ;
-                DisplayStatusMachine("System Stop");
-                c_varGolbal.IsRun = false; //khi Stop
-                if (c_varGolbal.QtyBeforePlasma == 2)
-                {
-                    chkLinkDB_ReadCode1.Enabled = true;
-                    chkLinkDB_ReadCode2.Enabled = true;
-                }
-                QuyenSuDung();
-                Stop_Allthread();
+
+            }
+            finally
+            {
                 CompleteStart = false;
             }
         }
@@ -693,15 +773,15 @@ namespace LineGolden_PLasma
             if (dt.Rows.Count > 0)
             {
                 c_varGolbal.LogicalStationNumberPlasma = Support_SQL.ToInt(dt.Rows[0]["StationNumber"]);
-                c_varGolbal.TriggerResest = Support_SQL.ToString(dt.Rows[0]["TriggerReset"]);
-                c_varGolbal.TriggerError = Support_SQL.ToString(dt.Rows[0]["TriggerError"]);
-                c_varGolbal.TriggerOK = Support_SQL.ToString(dt.Rows[0]["TriggerOK"]);
-                c_varGolbal.TriggerHaveData = Support_SQL.ToString(dt.Rows[0]["TriggerHaveData"]);
-                c_varGolbal.TriggerHaveDataOK = Support_SQL.ToString(dt.Rows[0]["TriggerHaveDataOK"]);
-                c_varGolbal.TriggerReadCode = Support_SQL.ToString(dt.Rows[0]["TriggerReadCode"]);
-                c_varGolbal.TriggerReadCodeOK = Support_SQL.ToString(dt.Rows[0]["TriggerReadCodeOK"]);
-                c_varGolbal.TriggerFinish = Support_SQL.ToString(dt.Rows[0]["TriggerFinish"]);
-                c_varGolbal.TriggerFinishOK = Support_SQL.ToString(dt.Rows[0]["TriggerFinishOK"]);
+                c_varGolbal.TriggerResest = Support_SQL.ToString(dt.Rows[0]["TriggerReset"]);//M1111
+                c_varGolbal.TriggerError = Support_SQL.ToString(dt.Rows[0]["TriggerError"]);//M1011
+                c_varGolbal.TriggerOK = Support_SQL.ToString(dt.Rows[0]["TriggerOK"]);//M1010
+                c_varGolbal.TriggerHaveData = Support_SQL.ToString(dt.Rows[0]["TriggerHaveData"]);//M1020
+                c_varGolbal.TriggerHaveDataOK = Support_SQL.ToString(dt.Rows[0]["TriggerHaveDataOK"]);//M1021
+                c_varGolbal.TriggerReadCode = Support_SQL.ToString(dt.Rows[0]["TriggerReadCode"]);//M1000
+                c_varGolbal.TriggerReadCodeOK = Support_SQL.ToString(dt.Rows[0]["TriggerReadCodeOK"]);//M1001
+                c_varGolbal.TriggerFinish = Support_SQL.ToString(dt.Rows[0]["TriggerFinish"]);//M1200
+                c_varGolbal.TriggerFinishOK = Support_SQL.ToString(dt.Rows[0]["TriggerFinishOK"]);//M1201
 
             }
             else

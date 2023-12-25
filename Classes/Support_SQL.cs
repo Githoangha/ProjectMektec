@@ -205,8 +205,8 @@ namespace LineGolden_PLasma
                 cmd.Connection = con;
                 cmd.CommandText = $"UPDATE Plasma SET StateUploadServer = '{StateUpload}',CompletePlasma={CompletePlasma},CompleteBoxing={BeginBoxing} " +
                                     $"WHERE ID_Program = {ProgramID} AND " +
-                                    $"ID_Plasma = {IndexPlasma} AND " +
-                                    $"TagJigPlasma = '{tagJigPlasma}' AND ID={ID_Jig};" ;
+                                    $"ID_Plasma = {IndexPlasma} AND ID={ID_Jig};";
+                                    //$"TagJigPlasma = '{tagJigPlasma}' AND ID={ID_Jig};" ;
                 object value= cmd.ExecuteScalar();
                 con.Close();
                 return 1;
@@ -299,20 +299,14 @@ namespace LineGolden_PLasma
             }
             return dt;
         }
-
-        /// <summary>
-        /// lấy Data ReadCode từ máy trước plassma
-        /// </summary>
-        /// <param name="sqlQuery"></param>
-        /// <returns></returns>
-        public static DataTable GetTableDataReadCode(string sqlQuery,string DBMachine)
+        public static DataTable GetTableDataPlasma(string sqlQuery, ref bool status)
         {
             DataSet ds = new DataSet();
             DataTable dt = new DataTable();
 
             try
             {
-                using (SQLiteConnection con = new SQLiteConnection(@"Data Source = \\" + DBMachine + "\\DB_ReadCode.db;Version=3;"))
+                using (SQLiteConnection con = new SQLiteConnection("Data Source = " + Application.StartupPath + "\\Plasma\\DB_Plasma.db;Version=3;"))
                 {
                     try
                     {
@@ -323,59 +317,36 @@ namespace LineGolden_PLasma
                             dt = ds.Tables[0];
                             con.Close();
                         }
+                        con.Close();
+                        status = true;
                     }
                     catch (Exception ex)
                     {
-
+                        Lib.SaveToLog("ErrorSQLProcessGetdataPlasma", $"{sqlQuery}", ex.ToString());
+                        Lib.ShowError(ex.ToString());
+                        status = false;
                         throw;
                     }
                     finally
                     {
                         con.Close();
                     }
+
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
             }
             return dt;
         }
-        public static int ExecuteQuery(string sqlQuery,string connectdb)
-        {
-            try
-            {
-                using (SQLiteConnection con = new SQLiteConnection(@"Data Source = \\" + connectdb + "\\DB_ReadCode.db;Version=3;"))
-                {
-                    try
-                    {
-                        using (SQLiteCommand cmd = new SQLiteCommand())
-                        {
-                            con.Open();
-                            cmd.Connection = con;
-                            cmd.CommandText = sqlQuery;
-                            cmd.ExecuteNonQuery();
-                            con.Close();
-                            return 1;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        return 0;
-                        throw;
-                    }
-                    finally
-                    {
-                        con.Close();
-                    }
-                    
-                }
-            }
-            catch (Exception ex)
-            {
-                return 0;
-            }
-        }
+
+        /// <summary>
+        /// lấy Data ReadCode từ máy trước plassma
+        /// </summary>
+        /// <param name="sqlQuery"></param>
+        /// <returns></returns>
+
 
         /// <summary>
         /// Truy xuất vào buffer DB lấy dữ liệu các jig vừa hoàn thành qua máy 
@@ -440,7 +411,8 @@ namespace LineGolden_PLasma
                     {
                         cmd.Connection = con;
                         string dateIn =GlobVar.DateTimeIn= DateTime.Now.AddSeconds(1).ToString("yyyy-MM-dd HH:mm:ss");
-                        cmd.CommandText = $"INSERT INTO Plasma(ID_Program, ID_Plasma, TagJigTransfer, TagJigPlasma, CodePCS,DateTimeInPlasma,Date_Time,CodeTray,CompletePlasma,LotID,MPN) VALUES('{ProgramID}', '{RfidIndex}', '{tagJigTransfer}','{tagJigPlasma}', '{codePCS}','{dateIn}','{dateIn}','{CodeTray}',0,'{LotID}','{MPN}')";
+                        cmd.CommandText = $"INSERT INTO Plasma(ID_Program, ID_Plasma, TagJigTransfer, TagJigPlasma, CodePCS,DateTimeInPlasma,Date_Time,CodeTray,CompletePlasma,CompleteBoxing,LotID,MPN) " +
+                                                    $"VALUES('{ProgramID}', '{RfidIndex}', '{tagJigTransfer}','{tagJigPlasma}', '{codePCS}','{dateIn}','{dateIn}','{CodeTray}',0,0,'{LotID}','{MPN}')";
                         res = cmd.ExecuteNonQuery();
                         con.Close();
                     }
@@ -625,13 +597,115 @@ namespace LineGolden_PLasma
         #endregion
 
         #region Function execute DB with LinkPathServer
+
+        public static DataTable GetTableDataReadCode(string sqlQuery, string connectDb)
+        {
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
+            string check = connectDb.Trim().Substring(0, 2);
+            if (check.Contains("\\"))
+            {
+                connectDb = "\\" + connectDb;
+            }
+            else
+            {
+
+            }
+            string str = $"Data Source = {connectDb}" + ";Version=3;";
+
+            try
+            {
+                using (SQLiteConnection con = new SQLiteConnection(str))
+                {
+                    try
+                    {
+                        using (SQLiteDataAdapter da = new SQLiteDataAdapter(sqlQuery, con))
+                        {
+                            con.Open();
+                            da.Fill(ds);
+                            dt = ds.Tables[0];
+                            con.Close();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Lib.ShowError(ex);
+                    }
+                    finally
+                    {
+                        con.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Lib.ShowError(ex.ToString());
+            }
+            return dt;
+        }
+        public static int ExecuteQuery(string sqlQuery, string connectDb)
+        {
+            try
+            {
+                string check = connectDb.Trim().Substring(0, 2);
+                if (connectDb.Contains("\\"))
+                {
+                    connectDb = "\\" + connectDb;
+                }
+                else
+                {
+
+                }
+                string strConnect = $"Data Source = {connectDb}" + ";Version=3;";
+                using (SQLiteConnection con = new SQLiteConnection(strConnect))
+                {
+                    try
+                    {
+                        using (SQLiteCommand cmd = new SQLiteCommand())
+                        {
+                            con.Open();
+                            cmd.Connection = con;
+                            cmd.CommandText = sqlQuery;
+                            cmd.ExecuteNonQuery();
+                            con.Close();
+                            return 1;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return 0;
+                        throw;
+                    }
+                    finally
+                    {
+                        con.Close();
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                return 0;
+            }
+        }
+
         public static DataTable GetTableData(string sqlQuery, string FilePathServer)
         {
             DataSet ds = new DataSet();
             DataTable dt = new DataTable();
+            string check = FilePathServer.Trim().Substring(0,2);
+            if (check.Contains("\\"))
+            {
+                FilePathServer = "\\" + FilePathServer;
+            }
+            else
+            {
+
+            }
+            string strConnect = $"Data Source ={FilePathServer};Version=3;";//$"Data Source = {FilePathServer}"+ ";Version=3;";
             try
             {
-                SQLiteConnection con = new SQLiteConnection($"Data Source={FilePathServer};Version=3;");
+                SQLiteConnection con = new SQLiteConnection(strConnect);
                 SQLiteDataAdapter da = new SQLiteDataAdapter(sqlQuery, con);
 
                 con.Open();
@@ -641,6 +715,40 @@ namespace LineGolden_PLasma
             }
             catch (Exception ex)
             {
+                MessageBox.Show(ex.ToString());
+            }
+
+            return dt;
+        }
+
+        public static DataTable GetTableData(string sqlQuery, string FilePathServer, ref bool status)
+        {
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
+            string check = FilePathServer.Trim().Substring(0, 2);
+            if (check.Contains("\\"))
+            {
+                FilePathServer = "\\" + FilePathServer;
+            }
+            else
+            {
+
+            }
+            string strConnect = $"Data Source = {FilePathServer}"  + ";Version=3;";
+            try
+            {
+                SQLiteConnection con = new SQLiteConnection(strConnect);
+                SQLiteDataAdapter da = new SQLiteDataAdapter(sqlQuery, con);
+
+                con.Open();
+                da.Fill(ds);
+                dt = ds.Tables[0];
+                con.Close();
+                status = true;
+            }
+            catch (Exception ex)
+            {
+                status = false;
                 MessageBox.Show(ex.ToString());
             }
 
