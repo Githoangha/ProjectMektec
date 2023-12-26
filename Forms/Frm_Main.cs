@@ -781,7 +781,7 @@ namespace LineGolden_PLasma
                 c_varGolbal.TriggerReadCode = Support_SQL.ToString(dt.Rows[0]["TriggerReadCode"]);//M1000
                 c_varGolbal.TriggerReadCodeOK = Support_SQL.ToString(dt.Rows[0]["TriggerReadCodeOK"]);//M1001
                 c_varGolbal.TriggerFinish = Support_SQL.ToString(dt.Rows[0]["TriggerFinish"]);//M1200
-                c_varGolbal.TriggerFinishOK = Support_SQL.ToString(dt.Rows[0]["TriggerFinishOK"]);//M1201vvvv
+                c_varGolbal.TriggerFinishOK = Support_SQL.ToString(dt.Rows[0]["TriggerFinishOK"]);//M1201
 
             }
             else
