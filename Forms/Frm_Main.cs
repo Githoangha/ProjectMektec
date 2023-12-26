@@ -22,7 +22,7 @@ namespace LineGolden_PLasma
 {
     public partial class Frm_Main : Form
     {
-
+        //khágkdgasdiasjdkagshdljagsiudgasigdilasug
         // Cho phép di chuyển Form Main
         public const int WM_NCLBUTTONDOWN = 0xA1;
         public const int HT_CAPTION = 0x2;
