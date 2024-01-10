@@ -58,9 +58,10 @@ namespace LineGolden_PLasma
             this.label1 = new System.Windows.Forms.Label();
             this.tablePanel1 = new DevExpress.Utils.Layout.TablePanel();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.lbStatusUpload = new System.Windows.Forms.Label();
             this.lbStatusReadJig = new System.Windows.Forms.Label();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.panel3 = new System.Windows.Forms.Panel();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.grdViewTag)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.grvViewTag)).BeginInit();
@@ -425,6 +426,25 @@ namespace LineGolden_PLasma
             this.panel2.Size = new System.Drawing.Size(1184, 39);
             this.panel2.TabIndex = 108;
             // 
+            // tableLayoutPanel2
+            // 
+            this.tableLayoutPanel2.ColumnCount = 4;
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 110F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 40F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 40F));
+            this.tableLayoutPanel2.Controls.Add(this.label2, 0, 0);
+            this.tableLayoutPanel2.Controls.Add(this.lbStatusUpload, 3, 0);
+            this.tableLayoutPanel2.Controls.Add(this.lbStatusReadJig, 1, 0);
+            this.tableLayoutPanel2.Controls.Add(this.panel3, 2, 0);
+            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
+            this.tableLayoutPanel2.RowCount = 1;
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(1184, 39);
+            this.tableLayoutPanel2.TabIndex = 103;
+            // 
             // lbStatusUpload
             // 
             this.lbStatusUpload.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -451,23 +471,12 @@ namespace LineGolden_PLasma
             this.lbStatusReadJig.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.lbStatusReadJig.Visible = false;
             // 
-            // tableLayoutPanel2
+            // panel3
             // 
-            this.tableLayoutPanel2.ColumnCount = 4;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 110F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 40F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 40F));
-            this.tableLayoutPanel2.Controls.Add(this.label2, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.lbStatusUpload, 3, 0);
-            this.tableLayoutPanel2.Controls.Add(this.lbStatusReadJig, 1, 0);
-            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 1;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(1184, 39);
-            this.tableLayoutPanel2.TabIndex = 103;
+            this.panel3.Location = new System.Drawing.Point(542, 3);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(208, 33);
+            this.panel3.TabIndex = 103;
             // 
             // uc_Plasma
             // 
@@ -526,5 +535,6 @@ namespace LineGolden_PLasma
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.Label lbStatusReadJig;
+        private System.Windows.Forms.Panel panel3;
     }
 }

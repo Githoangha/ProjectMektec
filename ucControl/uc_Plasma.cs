@@ -155,7 +155,7 @@ namespace LineGolden_PLasma
 
         void loadListCamBarcode()
         {
-            Lst_CamBarcode.Clear();
+            Lst_CamBarcode = new List<CamBarcode>();
             DataTable dt = Support_SQL.GetTableData($"SELECT *FROM {PLS.NameTable} WHERE {PLS.ID}={ProgramID} AND {PLS.PlasmaIndex}={PLasmaIndex} ");
             for (int i = 0; i < dt.Rows.Count; i++)
             {
@@ -208,39 +208,47 @@ namespace LineGolden_PLasma
                     {
                         case 10: // Đọc dữ liệu tag ở đầu vào                         
                             {
-
+                                
+                                Lib.EnableLabel(lbStatusReadJig, true);
                                 if (step == 0)
                                 {
+                                    Lib.ShowLabelResult(Color.White, lbStatusReadJig, "Begin Read Jig");
                                     List_DataTagPlasmaInput = new List<string>();
                                 }
                                 //Clear List DataTagPlasmaInput
                                 List<string> lstJigPlasmaError = new List<string>();
                                 //Trigger BarCode 
-                                
+
                                 //SET :Reset TriggerReadCodeOK
                                 PLC_Fx3Plasma.SetDevice(c_varGolbal.TriggerReadCodeOK, 0);
                                 StartTriggerCam(ConstSendByte.TON);
                                 DateTime start = DateTime.Now;
+                                IsExecuteFunctionReadTag = true;
                                 bool Completed = ExecuteWithTimeLimit(TimeSpan.FromSeconds(5), () => { StartReadTag(); });
+                                IsExecuteFunctionReadTag = false;
                                 DateTime stop = DateTime.Now;
                                 TimeSpan kq_test_time = stop - start;
 
                                 //HuyNV
                                 //Check số lượng CodeJig có bằng số lượng TagJig đã khai báo hay chưa và Đã đủ số lượng CodeTray =2 không.
 
-                                Lib.ShowLabelResult(Color.White, lbStatusReadJig, "Begin Read Jig");
-                                Lib.EnableLabel(lbStatusReadJig, true);
+
                                 if (List_DataTagPlasmaInput.Count != NumJigPlasma || List_DataCodeTray.Count != 2)
                                 {
                                     if (step <= 3)
                                     {
                                         step = step + 1;
+                                        Lib.ShowLabelResult(Color.White, lbStatusReadJig, $"Chụp Jig lần {step}-time{kq_test_time}");
                                         //StartTriggerCam(ConstSendByte.TON);
-                                        Completed = true;
+                                        Completed = false;
                                         continue;
                                     }
                                 }
-                                List_DataTagPlasmaInput= List_DataTagPlasmaInput.FindAll(x => !string.IsNullOrWhiteSpace(x) && !string.IsNullOrEmpty(x));
+                                if (!Completed && step <= 3)
+                                    continue;
+                                step = step + 1;
+                                Lib.ShowLabelResult(Color.White, lbStatusReadJig, $"Chụp Jig lần {step}-time{kq_test_time}");
+                                List_DataTagPlasmaInput = List_DataTagPlasmaInput.FindAll(x => !string.IsNullOrWhiteSpace(x) && !string.IsNullOrEmpty(x));
                                 if (List_DataTagPlasmaInput.Count <= 0)
                                 {
                                     PLC_Fx3Plasma.SetDevice(c_varGolbal.TriggerError, 1);
@@ -256,6 +264,8 @@ namespace LineGolden_PLasma
                                     //Số lượng Code bằng số lượng TagJig 
                                     if (List_DataTagPlasmaInput.Count == NumJigPlasma)
                                     {
+
+                                        Lib.SaveToLog("FileLog_ReadJig", string.Join(",", List_DataTagPlasmaInput), " ");//lưu log những jig nhận đc barcode
                                         //HuyNV-16/02/2023
                                         //xóa bỏ dữ liệu cũ của con codeJig khi đưa lại con đấy vào.
                                         //
@@ -386,6 +396,7 @@ namespace LineGolden_PLasma
                                             {
                                                 lock (lockSetDataDBPlasma)
                                                 {
+
                                                     List<string> list_Jig_False = new List<string>(); // List của code jig để kiểm tra data trên máy before plasma 
                                                     List<string> list_Lock_Qualify = new List<string>();
                                                     DataTable dtreadcode = new DataTable();
@@ -407,7 +418,7 @@ namespace LineGolden_PLasma
                                                     Lib.ShowLabelResult(Color.White, lbStatusReadJig, "lấy data sản phẩm đã đọc ở máy readcode");
                                                     foreach (string item in List_DataTagPlasmaInput) // kiểm tra jig đã qua máy before plasma chưa ?
                                                     {
-                                                        string sql_readCode = $"select * from readcode where {NameCol}='{item.Replace("\n", "").Replace("\0", "")}' AND StatusUpload = false ORDER BY ID DESC LIMIT 1 ";//or Code_TagJigNonePCS='{item}'
+                                                        string sql_readCode = $"select * from readcode where {NameCol}='{item.Replace("\n", "").Replace("\0", "")}' AND StatusUpload = 0 ORDER BY ID DESC LIMIT 1 ";//or Code_TagJigNonePCS='{item}'
                                                         //new Frm_ShowDialog(Frm_ShowDialog.Icon_Show.Infor, $"{sql_readCode} Usemachine:{c_varGolbal.UseMachine}").ShowDialog();
                                                         //Check xem máy plasma lấy dữ liệu từ máy nào ? FVI hay Berfore Plasma
                                                         if (c_varGolbal.UseMachine == 2) //line có 2 máy before plasma sẽ xử lý khác với line có 1 máy
@@ -436,11 +447,11 @@ namespace LineGolden_PLasma
                                                             else
                                                             {
                                                                 dtreadcode = Support_SQL.GetTableDataReadCode(sql_readCode, c_varGolbal.str_ConnectDBReadCode_BeforePlasma1);
-                                                                
-                                                                
+
+
                                                                 if (dtreadcode.Rows.Count > 0)
                                                                 {
-                                                                    
+
                                                                     ID_Jig newItem = new ID_Jig();
                                                                     newItem.ID = Support_SQL.ToInt(dtreadcode.Rows[0]["ID"]);
                                                                     newItem.NameJig = Lib.ToString(dtreadcode.Rows[0][NameCol]);
@@ -561,10 +572,12 @@ namespace LineGolden_PLasma
                                                     }
                                                     else
                                                     {
-                                                        Lib.ShowLabelResult(Color.White, lbStatusReadJig, "lưu dữ liệu vào máy và update trạng thái ở máy readcode");
-                                                        int checkUpdate = 1;
+
+                                                        int checkUpdate = 0;
+                                                        bool checkDoneCase20 = false;
                                                         for (int i = 0; i < dtAllJig.Rows.Count; i++)
                                                         {
+                                                            Lib.ShowLabelResult(Color.White, lbStatusReadJig, "lưu dữ liệu vào máy plasma");
                                                             string _tagJigTransfer = "";
                                                             if (c_varGolbal.GetJigHavePcs)
                                                             {
@@ -576,28 +589,68 @@ namespace LineGolden_PLasma
                                                             }
                                                             string codePCS_ = Support_SQL.ToString(dtAllJig.Rows[i]["CodePCS"]);
                                                             Support_SQL.SaveDataToBufferPlasma_new(ProgramID, PLasmaIndex, _tagJigTransfer, List_DataTagPlasmaInput[i], codePCS_, String.Join(",", List_DataCodeTray), c_varGolbal.LotID, c_varGolbal.MPN);
+                                                            Lib.ShowLabelResult(Color.White, lbStatusReadJig, $"Update trạng thái Jig {Lib.ToString(dtAllJig.Rows[i][NameCol])} ở máy readcode");
+                                                            checkUpdate = 0;
                                                             if (c_varGolbal.UseMachine == 2)
                                                             {
                                                                 if (c_varGolbal.QtyBeforePlasma == 2)
                                                                 {
                                                                     List<ID_Jig> Jig_Current = lst_ID_Jig.FindAll(x => x.ID == Support_SQL.ToInt(dtAllJig.Rows[i]["ID"]) && x.NameJig.Contains(dtAllJig.Rows[i][NameCol].ToString()));
+
                                                                     if (Jig_Current.Count > 0)
                                                                     {
-                                                                        checkUpdate = Support_SQL.ExecuteQuery($"UPDATE readcode SET StatusUpload = true WHERE ID = {Jig_Current[0].ID}", Jig_Current[0].link);
+                                                                        while (checkUpdate == 0)
+                                                                        {
+                                                                            checkUpdate = Support_SQL.ExecuteQuery($"UPDATE readcode SET StatusUpload = true WHERE ID = {Jig_Current[0].ID}", Jig_Current[0].link);
+                                                                        }
                                                                     }
+
                                                                 }
                                                                 else
                                                                 {
-                                                                    checkUpdate = Support_SQL.ExecuteQuery($"UPDATE readcode SET StatusUpload = true WHERE ID = {Support_SQL.ToInt(dtAllJig.Rows[i]["ID"])}", c_varGolbal.str_ConnectDBReadCode_BeforePlasma1);
+                                                                    while (checkUpdate == 0)
+                                                                    {
+                                                                        checkUpdate = Support_SQL.ExecuteQuery($"UPDATE readcode SET StatusUpload = true WHERE ID = {Support_SQL.ToInt(dtAllJig.Rows[i]["ID"])}", c_varGolbal.str_ConnectDBReadCode_BeforePlasma1);
+
+                                                                    }
                                                                 }
-                                                                Step_ReadTagPlasma = 30;//Next step 
+
                                                             }
                                                             else if (c_varGolbal.UseMachine == 1)
                                                             {
-                                                                checkUpdate = Support_SQL.ExecuteQuery($"UPDATE readcode SET StatusUpload = true WHERE ID = {Support_SQL.ToInt(dtAllJig.Rows[i]["ID"])}", c_varGolbal.str_ConnectDBReadCode_FVI);
-                                                                Step_ReadTagPlasma = 30;//Next step 
+                                                                while (checkUpdate == 0)
+                                                                {
+                                                                    checkUpdate = Support_SQL.ExecuteQuery($"UPDATE readcode SET StatusUpload = true WHERE ID = {Support_SQL.ToInt(dtAllJig.Rows[i]["ID"])}", c_varGolbal.str_ConnectDBReadCode_FVI);
+                                                                }
+                                                            }
+                                                            if (checkUpdate == 1)
+                                                            {
+                                                                lst_ID_Jig[lst_ID_Jig.FindIndex(x => x.ID == Lib.ToInt(dtAllJig.Rows[i]["ID"]))].update = true;
+                                                            }
+                                                            else
+                                                            {
+                                                                lst_ID_Jig[lst_ID_Jig.FindIndex(x => x.ID == Lib.ToInt(dtAllJig.Rows[i]["ID"]))].update = false;
                                                             }
                                                         }
+                                                        if (lst_ID_Jig.FindAll(x => x.update == false).Count > 0)
+                                                        {
+                                                            PLC_Fx3Plasma.SetDevice(c_varGolbal.TriggerError, 1);
+                                                            //SET :TriggerHaveData
+                                                            PLC_Fx3Plasma.SetDevice(c_varGolbal.TriggerHaveData, 1);
+
+                                                            list_Jig_False.Clear();
+                                                            List_DataTagPlasmaInput.Clear();
+                                                            List_DataCodeTray.Clear();
+                                                            list_Lock_Qualify.Clear();
+                                                            new Frm_ShowDialog(Frm_ShowDialog.Icon_Show.Error, $"update trạng thái jig ở máy readcode false hãy đọc lại Plate hàng").ShowDialog();
+                                                            Step_ReadTagPlasma = 0;//khi bị lỗi update máy readcode false
+                                                            break;
+                                                        }
+                                                        else
+                                                        {
+                                                            Step_ReadTagPlasma = 30;//Next step 
+                                                        }
+
                                                     }
                                                 }
                                             }
@@ -705,8 +758,8 @@ namespace LineGolden_PLasma
             {
                 try
                 {
-                    string cmdStr = $"SELECT * FROM Plasma WHERE TagJigPlasma = '{lstDataReadTagInput[i]}' AND Date_Time NOT IN('') AND CompletePlasma=1 ORDER by Date_Time DESC LIMIT 1;";
-                    DataTable dt = Support_SQL.GetTableDataPlasma(cmdStr);
+                    string cmdStr = $"SELECT * FROM Plasma WHERE TagJigPlasma = '{lstDataReadTagInput[i]}' AND Date_Time NOT IN('') AND CompletePlasma=0 ORDER by Date_Time DESC LIMIT 1;";
+                    DataTable dt = Support_SQL.GetTableDataPlasma(cmdStr,out string ex);
                     if (dt.Rows.Count > 0)
                     {
                         ///code kiểm tra thời gian của JIG 
@@ -716,7 +769,7 @@ namespace LineGolden_PLasma
                         TimeSpan timeSpan = dateTimeInPlasma - dateTimeOutPlasma;
                         //TimeSpan timeSpan = dateTimeOutPlasma - dateTimeInPlasma;
                         TimeCheck = Int32.Parse(timeSpan.TotalSeconds.ToString());
-                        if (TimeCheck <= c_varGolbal.TimeRepeatJig * 60)
+                        if (TimeCheck <= c_varGolbal.TimeRepeatJig * 40)
                         {
                             lstTagJigNotEnoughTime.Add(lstDataReadTagInput[i]);
                             dataPlasma data = new dataPlasma();
@@ -734,6 +787,10 @@ namespace LineGolden_PLasma
                         {
                             //Support_SQL.ClearRecordTagFinish(ProgramID, lstDataReadTagInput[i]);//xóa dữ liệu JIG
                         }
+                    }
+                    else if (!string.IsNullOrEmpty(ex.Trim())&&!string.IsNullOrWhiteSpace(ex.Trim()))
+                    {
+                        lstTagJigNotEnoughTime.Add(lstDataReadTagInput[i]);
                     }
                 }
                 catch (Exception ex)
@@ -812,156 +869,159 @@ namespace LineGolden_PLasma
                                         checkUpdate = false;
                                         try
                                         {
-                                            //HuyNV Thêm Điều kiện StateUploadServer ISNULL vào 
-                                            string stringLoadPlasma = $"Select * from Plasma where ID={JIG.ID} AND ID_Program={ProgramID} AND ID_Plasma={PLasmaIndex} AND CompletePlasma=0 AND CompleteBoxing=0 ORDER by ID DESC LIMIT 1 ";
-                                            DataTable dtPlasma = Support_SQL.GetTableDataPlasma(stringLoadPlasma);
-
-                                            if (dtPlasma.Rows.Count <= 0 || dtPlasma == null)
+                                            //string stringLoadPlasma = $"Select * from Plasma where ID={JIG.ID} AND ID_Program={ProgramID} AND CompletePlasma=0 AND CompleteBoxing=0 ORDER by ID DESC LIMIT 1 ";
+                                            //DataTable dtPlasma = Support_SQL.GetTableDataPlasma(stringLoadPlasma,out string Excep);
+                                            if (false/*dtPlasma.Rows.Count <= 0 || dtPlasma == null*/)
                                             {
-                                                Lib.SaveToLog("ErrorSQLite", $"{JIG.NameJig} - Process Upload Data (Case 10)", $"{stringLoadPlasma}");
-                                                continue;
+                                                //Lib.SaveToLog("ErrorSQLite", $"{JIG.NameJig} - Process Upload Data (Case 10)", $"{stringLoadPlasma}");
+                                                //continue;
                                             }
                                             else
                                             {
-                                                dataPlasma data = new dataPlasma();
-                                                data.ID = Lib.ToInt(dtPlasma.Rows[0]["ID"]);
-                                                data.TagJigPlasma = Lib.ToString(dtPlasma.Rows[0]["TagJigPlasma"]);
-                                                data.TagJigTransfer = Lib.ToString(dtPlasma.Rows[0]["TagJigTransfer"]);
-                                                data.PcsBarcode = Support_SQL.ToString(dtPlasma.Rows[0]["CodePCS"]);
-                                                data.StatusPlasma = Lib.ToString(dtPlasma.Rows[0]["StateUploadServer"]);
-                                                data.CodeTray = Lib.ToString(dtPlasma.Rows[0]["CodeTray"]);
 
-                                                //HA-04032023
-                                                data.DateTimeInPlasma = Lib.ToString(dtPlasma.Rows[0]["DateTimeInPlasma"]);
-                                                try
+                                            }
+                                            #region lấy lại
+                                            dataPlasma data = new dataPlasma();
+                                            data.ID = Lib.ToInt(JIG.ID);
+                                            data.TagJigPlasma = Lib.ToString(JIG.NameJig);
+                                            data.TagJigTransfer = Lib.ToString(JIG.JigTranfer);
+                                            data.PcsBarcode = Support_SQL.ToString(string.Join(",", JIG.lstPcs));
+                                            data.CodeTray = Lib.ToString(JIG.CodeTray);
+
+                                            //HA-04032023
+                                            data.DateTimeInPlasma = Lib.ToString(JIG.TimeIn);
+                                            data.DateTimeOutPlasma = Lib.ToString(JIG.TimeOut);
+                                            data.CycleTime = Lib.ToString(JIG.CycleTime);
+                                            //try
+                                            //{
+                                            //    data.DateTimeOutPlasma = Lib.ToString(dtPlasma.Rows[0]["DateTimeOutPlasma"]);
+                                            //    data.CycleTime = Lib.ToString(dtPlasma.Rows[0]["Cycletime"]);
+
+                                            //}
+                                            //catch (Exception ex)
+                                            //{
+                                            //    data.DateTimeOutPlasma = Lib.ToString(Lib.ToDate(data.DateTimeInPlasma).AddSeconds(44));
+                                            //    data.CycleTime = 44 + "";
+                                            //}
+
+                                            GlobVar.DateTimeOut = data.DateTimeOutPlasma;
+                                            GlobVar.TimeCT = data.CycleTime;
+
+                                            //////////-------------------------------------------------------------------------------------------------
+
+                                            checkUpdate = true;
+                                            List<string> List_DataCodePcs = JIG.lstPcs;//data.PcsBarcode.Replace("NoRead", "").Split(',').ToList();
+                                            DateTime start = DateTime.Now;
+                                            DateTime stop = new DateTime();
+                                            string ResultLog = "";
+                                            bool reUploadServer = false;
+                                            List<string> lstCheckReUpload = new List<string>();
+                                            uploadDataPlasma = false;
+                                            do
+                                            {
+                                                //if (frm_Wait_Upload != null) frm_Wait_Upload.Show(Parent,"Upload Server");
+                                                start = DateTime.Now;
+                                                //ImgLoad.Show();
+                                                int Completeplasma = Lib.ToInt(Support_SQL.ExecuteScalarDBPlasma($"Select CompletePlasma from Plasma where ID={data.ID} ORDER by ID DESC LIMIT 1"));//kiểm tra trong db là data đã upload chưa
+                                                if (Completeplasma == 1)
                                                 {
-                                                    data.DateTimeOutPlasma = Lib.ToString(dtPlasma.Rows[0]["DateTimeOutPlasma"]);
-                                                    data.CycleTime = Lib.ToString(dtPlasma.Rows[0]["Cycletime"]);
-
+                                                    uploadDataPlasma = true;
+                                                    break;
                                                 }
-                                                catch (Exception ex)
+                                                else
                                                 {
-                                                    data.DateTimeOutPlasma = Lib.ToString(Lib.ToDate(data.DateTimeInPlasma).AddSeconds(44));
-                                                    data.CycleTime = 44 + "";
-                                                }
+                                                    Lib.ShowLabelResult(Color.Orange, lbStatusUpload, "Đang upload data lên server MMCV...");
 
-                                                GlobVar.DateTimeOut = data.DateTimeOutPlasma;
-                                                GlobVar.TimeCT = data.CycleTime;
-
-                                                //////////-------------------------------------------------------------------------------------------------
-
-                                                checkUpdate = true;
-                                                List<string> List_DataCodePcs = data.PcsBarcode.Replace("NoRead", "").Split(',').ToList();
-                                                DateTime start = DateTime.Now;
-                                                DateTime stop = new DateTime();
-                                                string ResultLog = "";
-                                                bool reUploadServer = false;
-                                                List<string> lstCheckReUpload = new List<string>();
-                                                uploadDataPlasma = false;
-                                                do
-                                                {
-                                                    //if (frm_Wait_Upload != null) frm_Wait_Upload.Show(Parent,"Upload Server");
-                                                    start = DateTime.Now;
-                                                    //ImgLoad.Show();
-                                                    int Completeplasma = Lib.ToInt(Support_SQL.ExecuteScalarDBPlasma($"Select CompletePlasma from Plasma where ID={data.ID} ORDER by ID DESC LIMIT 1"));//kiểm tra trong db là data đã upload chưa
-                                                    if (Completeplasma == 1)
+                                                    #region kiểm tra và gửi data lên server, sẽ gửi lại nếu lỗi
+                                                    if (reUploadServer)
                                                     {
-                                                        uploadDataPlasma = true;
-                                                        break;
+                                                        lstCheckReUpload = CheckDataHavePlasma(List_DataCodePcs, JIG);
+                                                        if (lstCheckReUpload.Contains(GlobVar.Error56))
+                                                        {
+                                                            continue;
+                                                        }
+                                                        else
+                                                        {
+                                                            if (lstCheckReUpload.Count < List_DataCodePcs.Count && lstCheckReUpload.Count >= 1)
+                                                            {
+                                                                string strJoin = string.Join("\r\n", lstCheckReUpload);
+                                                                new Frm_ShowDialog(Frm_ShowDialog.Icon_Show.Error, $"Jig {data.TagJigPlasma} có những Pcs đã có trên server\r\n{strJoin}").ShowDialog();
+                                                                uploadDataPlasma = true;
+                                                            }
+                                                            else if (lstCheckReUpload.Count == List_DataCodePcs.Count)
+                                                            {
+                                                                uploadDataPlasma = true;
+                                                            }
+                                                            else if (lstCheckReUpload.Count <= 0)
+                                                            {
+                                                                uploadDataPlasma = Upload_DataPlasma(_LineID, _DeviceID, c_varGolbal.MPN, c_varGolbal.StaffID, c_varGolbal.LotID, List_DataCodePcs, data.TagJigPlasma, data.CodeTray, ref ResultLog);
+                                                            }
+                                                        }
                                                     }
                                                     else
                                                     {
-                                                        Lib.ShowLabelResult(Color.Orange, lbStatusUpload, "Đang upload data lên server MMCV...");
+                                                        uploadDataPlasma = Upload_DataPlasma(_LineID, _DeviceID, c_varGolbal.MPN, c_varGolbal.StaffID, c_varGolbal.LotID, List_DataCodePcs, data.TagJigPlasma, data.CodeTray, ref ResultLog);
+                                                    }
+                                                    #endregion
 
-                                                        #region kiểm tra và gửi data lên server, sẽ gửi lại nếu lỗi
-                                                        if (reUploadServer)
+                                                    #region Lưu log các dữ liệu đã gửi lên server
+                                                    stop = DateTime.Now;
+                                                    TimeSpan kq = stop - start;
+                                                    int LengthSpace = start.ToString("HH:mm:ss").Length;
+                                                    string strSpace = Lib.CreateString(LengthSpace, " ");
+                                                    if (reUploadServer)
+                                                    {
+                                                        if (lstCheckReUpload.Count == List_DataCodePcs.Count)
                                                         {
-                                                            lstCheckReUpload = CheckDataHavePlasma(List_DataCodePcs, JIG);
-                                                            if (lstCheckReUpload.Contains(GlobVar.Error56))
-                                                            {
-                                                                continue;
-                                                            }
-                                                            else
-                                                            {
-                                                                if (lstCheckReUpload.Count < List_DataCodePcs.Count && lstCheckReUpload.Count >= 1)
-                                                                {
-                                                                    string strJoin = string.Join("\r\n", lstCheckReUpload);
-                                                                    new Frm_ShowDialog(Frm_ShowDialog.Icon_Show.Error, $"Jig {data.TagJigPlasma} có những Pcs đã có trên server\r\n{strJoin}").ShowDialog();
-                                                                    uploadDataPlasma = true;
-                                                                }
-                                                                else if (lstCheckReUpload.Count == List_DataCodePcs.Count)
-                                                                {
-                                                                    uploadDataPlasma = true;
-                                                                }
-                                                                else if (lstCheckReUpload.Count <= 0)
-                                                                {
-                                                                    uploadDataPlasma = Upload_DataPlasma(_LineID, _DeviceID, c_varGolbal.MPN, c_varGolbal.StaffID, c_varGolbal.LotID, List_DataCodePcs, data.TagJigPlasma, data.CodeTray, ref ResultLog);
-                                                                }
-                                                            }
+                                                            Lib.SaveToLog(NameFileLog_Main, start, stop, $"Send:Reupload PlasmaReading ({string.Join(",", List_DataCodePcs)})\r\n{strSpace} LotID:{c_varGolbal.LotID}", $"Receive: (Số Pcs check bằng số lượng upload - {string.Join(",", lstCheckReUpload)})\r\nStatus:{uploadDataPlasma}-StatusPlasma:{Completeplasma}", data.TagJigPlasma, kq.TotalSeconds);
                                                         }
                                                         else
                                                         {
-                                                            uploadDataPlasma = Upload_DataPlasma(_LineID, _DeviceID, c_varGolbal.MPN, c_varGolbal.StaffID, c_varGolbal.LotID, List_DataCodePcs, data.TagJigPlasma, data.CodeTray, ref ResultLog);
+                                                            Lib.SaveToLog(NameFileLog_Main, start, stop, $"Send:Reupload PlasmaReading ({string.Join(",", List_DataCodePcs)})\r\n{strSpace} LotID:{c_varGolbal.LotID}", $"Receive: ({ResultLog})\r\nStatus:{uploadDataPlasma}-StatusPlasma:{Completeplasma}", data.TagJigPlasma, kq.TotalSeconds);
                                                         }
-                                                        #endregion
 
-                                                        #region Lưu log các dữ liệu đã gửi lên server
-                                                        stop = DateTime.Now;
-                                                        TimeSpan kq = stop - start;
-                                                        int LengthSpace = start.ToString("HH:mm:ss").Length;
-                                                        string strSpace = Lib.CreateString(LengthSpace, " ");
-                                                        if (reUploadServer)
-                                                        {
-                                                            if (lstCheckReUpload.Count == List_DataCodePcs.Count)
-                                                            {
-                                                                Lib.SaveToLog(NameFileLog_Main, start, stop, $"Send:Reupload PlasmaReading ({string.Join(",", List_DataCodePcs)})\r\n{strSpace} LotID:{c_varGolbal.LotID}", $"Receive: (Số Pcs check bằng số lượng upload - {string.Join(",", lstCheckReUpload)})\r\nStatus:{uploadDataPlasma}-StatusPlasma:{Completeplasma}", data.TagJigPlasma, kq.TotalSeconds);
-                                                            }
-                                                            else
-                                                            {
-                                                                Lib.SaveToLog(NameFileLog_Main, start, stop, $"Send:Reupload PlasmaReading ({string.Join(",", List_DataCodePcs)})\r\n{strSpace} LotID:{c_varGolbal.LotID}", $"Receive: ({ResultLog})\r\nStatus:{uploadDataPlasma}-StatusPlasma:{Completeplasma}", data.TagJigPlasma, kq.TotalSeconds);
-                                                            }
+                                                    }
+                                                    else
+                                                    {
+                                                        Lib.SaveToLog(NameFileLog_Main, start, stop, $"Send:PlasmaReading ({string.Join(",", List_DataCodePcs)})\r\n{strSpace} LotID:{c_varGolbal.LotID}", $"Receive: ({ResultLog})\r\nStatus:{uploadDataPlasma}-StatusPlasma:{Completeplasma}", data.TagJigPlasma, kq.TotalSeconds);
+                                                    }
+                                                    #endregion
 
-                                                        }
-                                                        else
+                                                    bool checkSave = false;
+                                                    if (uploadDataPlasma)
+                                                    {
+                                                        do
                                                         {
-                                                            Lib.SaveToLog(NameFileLog_Main, start, stop, $"Send:PlasmaReading ({string.Join(",", List_DataCodePcs)})\r\n{strSpace} LotID:{c_varGolbal.LotID}", $"Receive: ({ResultLog})\r\nStatus:{uploadDataPlasma}-StatusPlasma:{Completeplasma}", data.TagJigPlasma, kq.TotalSeconds);
-                                                        }
-                                                        #endregion
-
-                                                        bool checkSave = false;
-                                                        if (uploadDataPlasma)
-                                                        {
-                                                            do
+                                                            if (Lib.ToInt(Support_SQL.SaveStateUploadDataServer(ProgramID, PLasmaIndex, data.ID, data.TagJigPlasma, "OK", 1, 0)) == 1)
                                                             {
-                                                                if (Lib.ToInt(Support_SQL.SaveStateUploadDataServer(ProgramID, PLasmaIndex, data.ID, data.TagJigPlasma, "OK", 1, 0)) == 1)
-                                                                {
-                                                                    checkSave = true;
-                                                                    break;
-                                                                }
+                                                                checkSave = true;
+                                                                break;
                                                             }
-                                                            while (!checkSave);
-                                                            data.StatusPlasma = "OK";
                                                         }
-                                                        else
-                                                        {
-                                                            reUploadServer = true;
-                                                            new Frm_ShowDialog(Frm_ShowDialog.Icon_Show.Error, $"Fail Upload Data Plasma To Server!", 3000).ShowDialog();
-                                                        }
+                                                        while (!checkSave);
+                                                        data.StatusPlasma = "OK";
+                                                    }
+                                                    else
+                                                    {
+                                                        reUploadServer = true;
+                                                        new Frm_ShowDialog(Frm_ShowDialog.Icon_Show.Error, $"Fail Upload Data Plasma To Server!", 3000).ShowDialog();
                                                     }
                                                 }
-                                                while (!uploadDataPlasma && c_varGolbal.IsRun);
-                                                lst_dataPlasma.Add(data);
                                             }
+                                            while (!uploadDataPlasma && c_varGolbal.IsRun);
+                                            lst_dataPlasma.Add(data);
+                                            #endregion
+
                                         }
                                         catch (Exception ex)
                                         {
                                             //if (frm_Wait_Upload != null) frm_Wait_Upload.Close();
                                             checkUpdate = false;
                                             Lib.SaveToLog("ExceptionProcessUploadServer", "", ex.ToString());
-                                            MessageBox.Show(ex.Message);
                                         }
 
-                                    } 
+
+                                    }
                                     #endregion
 
                                     #region Upload OEE 
@@ -1049,7 +1109,7 @@ namespace LineGolden_PLasma
                                         if (repeat)
                                         {
                                             Lib.ShowLabelResult(Color.Orange, lbStatusUpload, "Đang chờ đọc xong plate ở máy Boxing...");
-                                            Thread.Sleep(30);
+                                            Thread.Sleep(50);
                                         }
                                     }
                                     while (repeat);
@@ -1131,12 +1191,15 @@ namespace LineGolden_PLasma
                                 //Lấy Trigger Mở lồng lên lấy dữ liệu update vào DB Plama
                                 PLC_Fx3Plasma.GetDevice("M133", out int M133);
                                 PLC_Fx3Plasma.GetDevice("M133", out int M135);
+                                Lib.EnableLabel(lbStatusUpload, false);
+                                Lib.ShowLabelResult(Color.Orange, lbStatusUpload, "Chờ lồng mở...");
                                 if (M133 == 0 && M135 == 0)
                                 {
                                     PLC_Fx3Plasma.GetDevice("M132", out int Trigger_Up);//đọc thành công set M133 lên 1
                                     if (Trigger_Up == 1)
                                     {
-
+                                        Lib.ShowLabelResult(Color.Orange, lbStatusUpload, "Lấy mã jig từ plc...");
+                                        Lib.EnableLabel(lbStatusUpload, true);
                                         //Lấy Giá Trị Code Tại vị trí máy Plasma từ PLC
                                         MxComponent.ReadStringPLC(PLC_Fx3Plasma, "D1200", 90, out CodePosition_3_Update);
                                         string codeJig = CodePosition_3_Update.Replace("\0", "").Replace("\r", "").Replace("\n", "");
@@ -1163,7 +1226,7 @@ namespace LineGolden_PLasma
                                         {
                                             List_CodeJig = new List<string>();
                                             lst_Jig_Upload = new List<ID_Jig>();
-                                            List<string>lst_temp= codeJig.Split('/').Distinct().ToList().FindAll(x => !string.IsNullOrWhiteSpace(x) && !string.IsNullOrEmpty(x));
+                                            List<string> lst_temp = codeJig.Split('/').Distinct().ToList().FindAll(x => !string.IsNullOrWhiteSpace(x) && !string.IsNullOrEmpty(x));
                                             List_CodeJig = codeJig.Split('/').Distinct().ToList();
                                             List_CodeJig = List_CodeJig.FindAll(x => !string.IsNullOrWhiteSpace(x) && !string.IsNullOrEmpty(x));
                                             if (List_CodeJig.Count > 0)
@@ -1195,48 +1258,72 @@ namespace LineGolden_PLasma
                                                 foreach (var item in List_CodeJig)
                                                 {
                                                     string select = $"SELECT ID FROM Plasma WHERE TagJigPlasma = '{item.Trim()}' AND ID_Program={ProgramID} AND CompletePlasma=0 AND CompleteBoxing=0 AND LotID='{c_varGolbal.LotID}' ORDER BY ID DESC LIMIT 1";
-                                                    int ID = Lib.ToInt(Support_SQL.ExecuteScalarDBPlasma(select));
+                                                    int ID = Lib.ToInt(Support_SQL.ExecuteScalarDBPlasma(select, out string ex));
 
                                                     if (ID > 0)
                                                     {
+                                                        string sqlselect = $"Select * from Plasma where ID={ID} AND ID_Program={ProgramID} AND CompletePlasma=0 AND CompleteBoxing=0";
+                                                        DataTable dt = Support_SQL.GetTableDataPlasma(sqlselect, out string excep);
                                                         if (cycletime == "0")
                                                         {
-                                                            string sqlselect = $"SELECT * FROM Plasma WHERE ID={ID} ORDER BY ID DESC LIMIT 1";
-                                                            DataTable dt = Support_SQL.GetTableDataPlasma(sqlselect);
                                                             if (dt.Rows.Count > 0)
                                                             {
                                                                 cycletime = "43";
                                                                 datetimeIN = datetimeOUT - TimeSpan.FromSeconds(Lib.ToDouble(cycletime));
                                                                 IN = datetimeIN.ToString("yyyy-MM-dd HH:mm:ss");
                                                                 Support_SQL.UpdateDateTimePlasma(ProgramID, PLasmaIndex, ID, item.Trim(), OUT, IN, cycletime);
-                                                                lst_Jig_Upload.Add(new ID_Jig { ID = ID, NameJig = item.Trim(), LotID = c_varGolbal.LotID });
+                                                                lst_Jig_Upload.Add(new ID_Jig
+                                                                {
+                                                                    ID = ID,
+                                                                    NameJig = item.Trim(),
+                                                                    JigTranfer = Lib.ToString(dt.Rows[0]["TagJigTransfer"]),
+                                                                    CodeTray = Lib.ToString(dt.Rows[0]["CodeTray"]),
+                                                                    lstPcs = Lib.ToString(dt.Rows[0]["CodePCS"]).Replace("NoRead", "").Split(',').ToList(),
+                                                                    TimeIn = IN,
+                                                                    TimeOut = OUT,
+                                                                    CycleTime = cycletime,
+                                                                    LotID = c_varGolbal.LotID
+                                                                });
                                                             }
                                                             else
                                                             {
-                                                                Lib.SaveToLog("ErrorSaveOut", $"ID Jig đó là:", $"{ID}");
-                                                                Lib.SaveToLog("ErrorSaveOut", $"Câu lệch truy vấn là:", $"{select}");
+                                                                check = false;
+                                                                Lib.SaveToLog("ErrorSaveOut", $"ID Jig đó là:", $"{ID}\r\n" +
+                                                                             $"Câu lệch truy vấn là:{select}\r\n" +
+                                                                             $"{excep}");
                                                             }
                                                         }
                                                         else
                                                         {
-                                                            string sqlselect = $"SELECT * FROM Plasma WHERE ID={ID} ORDER BY ID DESC LIMIT 1";
-                                                            DataTable dt = Support_SQL.GetTableDataPlasma(sqlselect);
                                                             if (dt.Rows.Count > 0)
                                                             {
                                                                 Support_SQL.UpdateDateTimePlasma(ProgramID, PLasmaIndex, ID, item.Trim(), OUT, IN, cycletime);
-                                                                lst_Jig_Upload.Add(new ID_Jig { ID = ID, NameJig = item.Trim(), LotID = c_varGolbal.LotID });
+                                                                lst_Jig_Upload.Add(new ID_Jig
+                                                                {
+                                                                    ID = ID,
+                                                                    NameJig = item.Trim(),
+                                                                    JigTranfer = Lib.ToString(dt.Rows[0]["TagJigTransfer"]),
+                                                                    CodeTray = Lib.ToString(dt.Rows[0]["CodeTray"]),
+                                                                    lstPcs = Lib.ToString(dt.Rows[0]["CodePCS"]).Replace("NoRead", "").Split(',').ToList(),
+                                                                    TimeIn = IN,
+                                                                    TimeOut = OUT,
+                                                                    CycleTime = cycletime,
+                                                                    LotID = c_varGolbal.LotID
+                                                                });
                                                             }
                                                             else
                                                             {
-                                                                Lib.SaveToLog("ErrorSaveOut", $"ID Jig đó là:", $"{ID}");
-                                                                Lib.SaveToLog("ErrorSaveOut", $"Câu lệch truy vấn là:", $"{select}");
+                                                                check = false;
+                                                                Lib.SaveToLog("ErrorSaveOut", $"ID Jig đó là:", $"{ID}\r\n" +
+                                                                             $"Câu lệch truy vấn là:{select}\r\n" +
+                                                                             $"{excep}");
                                                             }
 
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        Lib.SaveToLog("ErrorUploadData_FindJig", $"Câu lệch truy vấn là:", $"{select}");
+                                                        Lib.SaveToLog("ErrorUploadData_FindJig", $"Câu lệch truy vấn là:", $"{select}\r\n{ex}");
                                                         check = false;
                                                     }
                                                 }
@@ -1525,7 +1612,7 @@ namespace LineGolden_PLasma
         static readonly object lockSave_2_to_3 = new object();
 
 
-       
+
         /// <summary>
         /// Process reset plasma
         /// </summary>
@@ -1638,12 +1725,16 @@ namespace LineGolden_PLasma
         /// <returns></returns>
         private static bool ExecuteWithTimeLimit(TimeSpan timeSpan, Action codeBlock)
         {
-            IsExecuteFunctionReadTag = true;
+            
             try
             {
                 Task task = Task.Factory.StartNew(() => codeBlock());
                 task.Wait(timeSpan);
-                IsExecuteFunctionReadTag = false;
+                
+                if (IsExecuteFunctionReadTag)
+                {
+                    IsExecuteFunctionReadTag = false;
+                }
                 return task.IsCompleted;
             }
             catch (AggregateException ae)
@@ -1651,12 +1742,13 @@ namespace LineGolden_PLasma
                 throw ae.InnerExceptions[0];
             }
         }
-        private static bool ExecuteWithTimeLimitOrigin(TimeSpan timeSpan, Action codeBlock)
+        private static bool ExecuteReadJig(TimeSpan timeSpan, Action codeBlock)
         {
             try
             {
                 Task task = Task.Factory.StartNew(() => codeBlock());
                 task.Wait(timeSpan);
+                int a = 10;
                 return task.IsCompleted;
             }
             catch (AggregateException ae)
@@ -1974,24 +2066,30 @@ namespace LineGolden_PLasma
             }
         }
 
-        /// <summary>
-        /// Bắt đầu luồng đọc Code Jig bằng Cam Barcode
-        /// </summary>
+
+        private void StartTriggerCam(byte[] bytesend)
+        {
+            if (Lst_CamBarcode.Count > 0)
+            {
+                foreach (CamBarcode item in Lst_CamBarcode)
+                {
+                    item.SendSignal(bytesend);
+                    //item.SendSignal_Modbus(bytesend);
+                }
+            }
+
+        }
         private void StartReadTag()
         {
             bool complete = false;
-
-            IsExecuteFunctionReadTag = true;
             if (Lst_CamBarcode.Count > 0)
             {
                 foreach (CamBarcode item in Lst_CamBarcode)
                 {
                     item.IsComplete = false;
-                    Task.Factory.StartNew(item.StartReadTag);
-                    //item.StartReadTag();
+                    Task.Factory.StartNew(item.StartReadTagNew);
                 }
             }
-
             while (IsExecuteFunctionReadTag)
             {
                 foreach (CamBarcode item in Lst_CamBarcode)
@@ -2004,6 +2102,7 @@ namespace LineGolden_PLasma
                     else
                     {
                         complete = false;
+                        break;
                     }
                 }
                 if (complete)
@@ -2012,6 +2111,9 @@ namespace LineGolden_PLasma
                 }
             }
         }
+        /// <summary>
+        /// Bắt đầu luồng đọc Code Jig bằng Cam Barcode
+        /// </summary>
         private void StartReadTag_new()
         {
             if (Lst_CamBarcode.Count > 0)
@@ -2022,24 +2124,9 @@ namespace LineGolden_PLasma
                 }
             }
         }
-
-
-        /// <summary>
-        /// Tắt luông quét đọc thẻ
-        /// </summary>
-        private void StopReadTag()
-        {
-            try
-            {
-
-            }
-            catch (Exception Ex)
-            {
-
-
-            }
-
-        }
+        
+        
+        
         private void StatusLable(Label label, Color color, string statusString)
         {
             if (label.InvokeRequired)
@@ -2058,18 +2145,7 @@ namespace LineGolden_PLasma
             }
         }
 
-        private void StartTriggerCam(byte[] bytesend)
-        {
-            if (Lst_CamBarcode.Count > 0)
-            {
-                foreach (CamBarcode item in Lst_CamBarcode)
-                {
-                    item.SendSignal(bytesend);
-                    //item.SendSignal_Modbus(bytesend);
-                }
-            }
-
-        }
+        
         #endregion
 
         #region Event user control
@@ -2247,12 +2323,19 @@ namespace LineGolden_PLasma
         {
             public int ID { get; set; }
             public string NameJig { get; set; }
+            public string JigTranfer { get; set; }
+            public string CodeTray { get; set; }
             public string link { get; set; }
             public int NoLock { get; set; }
             public int QualifyJig { get; set; }
             public List<string> lstPcs { get; set; }
+            public string CycleTime { get; set; }
+            public string TimeIn { get; set; }
+            public string TimeOut { get; set; }
             public string LotID { get; set; }
             public string MPN { get; set; }
+
+            public bool update { get; set; }
 
             public ID_Jig()
             {
@@ -2297,6 +2380,11 @@ namespace LineGolden_PLasma
             Lib.SaveToLog(NameFileLog_Main, start, stop, $"Send:CheckDataPlasma ({strSend})", $"Receive: ({strReceive})", Jig.NameJig, kq.TotalSeconds);
             return Result;
         }
+
+        bool start_test = false;
+        List<CamBarcode> Lst_CamBarcode_test = new List<CamBarcode>();
+
+       
 
         public List<string> CheckNoDataPlasma(List<string> listPcs, ID_Jig Jig)
         {
@@ -2377,6 +2465,192 @@ namespace LineGolden_PLasma
             //}));
 
         }
+        #endregion
+
+        #region Test barcode
+        private void StartTriggerCam_test(byte[] bytesend)
+        {
+            if (Lst_CamBarcode_test.Count > 0)
+            {
+                foreach (CamBarcode item in Lst_CamBarcode_test)
+                {
+                    item.SendSignal(bytesend);
+                    //item.SendSignal_Modbus(bytesend);
+                }
+            }
+
+        }
+        private void ReadTag_test(TimeSpan time)
+        {
+            bool complete = false;
+            if (Lst_CamBarcode_test.Count > 0)
+            {
+                foreach (CamBarcode item in Lst_CamBarcode_test)
+                {
+                    //Task.Factory.StartNew(item.StartReadTagNew);
+                }
+            }
+            DateTime start = DateTime.Now;
+            while (IsExecuteFunctionReadTag)
+            {
+                if (start + time < DateTime.Now)
+                {
+                    IsExecuteFunctionReadTag = false;
+                    break;
+                }
+                foreach (CamBarcode item in Lst_CamBarcode_test)
+                {
+                    bool kt = item.IsComplete;
+                    if (item.IsComplete)
+                    {
+                        complete = true;
+                    }
+                    else
+                    {
+                        complete = false;
+                        break;
+                    }
+                }
+                if (complete)
+                {
+                    break;
+                }
+            }
+        }
+        private void ReadTag_test()
+        {
+            bool complete = false;
+            if (Lst_CamBarcode_test.Count > 0)
+            {
+                foreach (CamBarcode item in Lst_CamBarcode_test)
+                {
+                    item.IsComplete = false;
+                    //Task.Factory.StartNew(item.StartReadTagNew);
+                }
+            }
+            while (IsExecuteFunctionReadTag)
+            {
+                foreach (CamBarcode item in Lst_CamBarcode_test)
+                {
+                    bool kt = item.IsComplete;
+                    if (item.IsComplete)
+                    {
+                        complete = true;
+                    }
+                    else
+                    {
+                        complete = false;
+                        break;
+                    }
+                }
+                if (complete)
+                {
+                    break;
+                }
+            }
+        }
+        private void btn_testConnect_Click(object sender, EventArgs e)
+        {
+            if (!start_test)
+            {
+                start_test = true;
+                Lst_CamBarcode_test = new List<CamBarcode>();
+                DataTable dt = Support_SQL.GetTableData($"SELECT *FROM {PLS.NameTable} WHERE {PLS.ID}={ProgramID} AND {PLS.PlasmaIndex}={PLasmaIndex} ");
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+
+                    string ip = dt.Rows[i][PLS.Ip_Barcode].ToString();
+                    int port = Lib.ToInt(dt.Rows[i][PLS.Port_Barcode]);
+                    CamBarcode cam = new CamBarcode(ip, port, NumJigPlasma);
+                    Lst_CamBarcode_test.Add(cam);
+                }
+                foreach (var item in Lst_CamBarcode_test)
+                {
+                    item.Connect();
+                }
+
+            }
+            else
+            {
+                start_test = false;
+            }
+        }
+        void test_barcode()
+        {
+            int step = 0;
+            List_DataTagPlasmaInput = new List<string>();
+            List_DataCodeTray = new List<string>();
+            Lib.ShowLabelResult(Color.White, lbStatusReadJig, "Begin Read Jig");
+            Lib.EnableLabel(lbStatusReadJig, true);
+            while (start_test)
+            {
+                //StartTriggerCam_test(ConstSendByte.TON);
+                IsExecuteFunctionReadTag = true;//test
+                DateTime start = DateTime.Now;
+                //bool complete = ExecuteReadJig(TimeSpan.FromSeconds(5), () => { ReadTag_test(); });
+                //ReadTag_test(TimeSpan.FromSeconds(5));
+                IsExecuteFunctionReadTag = false;//test
+                DateTime stop = DateTime.Now;
+                TimeSpan kq_test_time = stop - start;
+                //Lib.ShowInfor(kq_test_time.TotalSeconds+"");
+                if (List_DataTagPlasmaInput.Count != NumJigPlasma || List_DataCodeTray.Count != 2)//test
+                {
+                    if (step <= 3)
+                    {
+                        step = step + 1;
+                        Lib.ShowLabelResult(Color.White, lbStatusReadJig, $"Chụp Jig lần {step}-time{kq_test_time}");
+                        continue;
+                    }
+                    else
+                    {
+
+                    }
+                }
+                step = step + 1;
+                Lib.ShowLabelResult(Color.White, lbStatusReadJig, $"Chụp Jig lần {step}-time{kq_test_time}");
+                if (List_DataCodeTray.Count == 2)//test
+                {
+                    //Số lượng Code bằng số lượng TagJig 
+                    if (List_DataTagPlasmaInput.Count == NumJigPlasma)//test
+                    {
+                        new Frm_ShowDialog(Frm_ShowDialog.Icon_Show.Infor, $"số lượng code Tray đọc được là:\r\n{string.Join("\r\n", List_DataCodeTray)}\r\nSố lượng code jig đọc được là:\r\n{string.Join("\r\n", List_DataTagPlasmaInput)}", 5000).ShowDialog();//test
+
+                    }
+                    else
+                    {
+                        Frm_ShowDialog newfrm = new Frm_ShowDialog(Frm_ShowDialog.Icon_Show.Error,
+                                $"Check NumberJig In Plasma .\r\n" +
+                                $"Số lượng CodeJig ít hơn số lượng quy định.\r\n" +
+                                $"{string.Join("\r\n", List_DataTagPlasmaInput)}" +//test
+                                $"Nhấn Confirm để tiếp tục.");
+                        newfrm.ShowDialog();
+                    }
+                    //start_test = false;
+                    break;
+                }
+                else
+                {
+                    new Frm_ShowDialog(Frm_ShowDialog.Icon_Show.Error, $"Thiếu số lượng Code Tray\r\n code tray đọc được {string.Join("\r\n", List_DataCodeTray)}").ShowDialog();//test
+                    //start_test = false;
+                    break;
+                }
+
+            }
+        }
+
+        Thread threadTest;
+        private void btn_testTrigger_Click(object sender, EventArgs e)
+        {
+            ////test_barcode();
+            //if (threadTest != null)
+            //{
+            //    threadTest.Abort();
+            //}
+            //threadTest = new Thread(test_barcode);
+            //threadTest.IsBackground = true;
+            //threadTest.Start();
+        }
+
         #endregion
     }
 }

@@ -156,6 +156,32 @@ namespace LineGolden_PLasma
             }
             catch (Exception ex)
             {
+
+                return null;
+            }
+        }
+        public static object ExecuteScalarDBPlasma(string sqlQuery,out string excep)
+        {
+            excep = "";
+            try
+            {
+                using (SQLiteConnection con = new SQLiteConnection("Data Source = " + Application.StartupPath + "\\Plasma\\DB_Plasma.db;Version=3;"))
+                {
+                    using (SQLiteCommand cmd = new SQLiteCommand())
+                    {
+                        con.Open();
+                        cmd.Connection = con;
+                        cmd.CommandText = sqlQuery;//"delete from Student where ID = 0";//Detele 
+                        object value = cmd.ExecuteScalar();
+                        con.Close();
+                        return value;
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                excep = ex.ToString();
                 return null;
             }
         }
@@ -291,6 +317,44 @@ namespace LineGolden_PLasma
                         con.Close();
                     }
                     
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+            return dt;
+        }
+
+        public static DataTable GetTableDataPlasma(string sqlQuery,out string excep)
+        {
+            DataSet ds = new DataSet();
+            DataTable dt = new DataTable();
+            excep = "";
+            try
+            {
+                using (SQLiteConnection con = new SQLiteConnection("Data Source = " + Application.StartupPath + "\\Plasma\\DB_Plasma.db;Version=3;"))
+                {
+                    try
+                    {
+                        using (SQLiteDataAdapter da = new SQLiteDataAdapter(sqlQuery, con))
+                        {
+                            con.Open();
+                            da.Fill(ds);
+                            dt = ds.Tables[0];
+                            con.Close();
+                        }
+                        con.Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        excep = ex.ToString();
+                    }
+                    finally
+                    {
+                        con.Close();
+                    }
+
                 }
             }
             catch (Exception)
@@ -553,47 +617,7 @@ namespace LineGolden_PLasma
             }
             return res <= 0;
         }
-        /// <summary>
-        /// kiểm tra số lượng các jig còn trong trong buffer theo các máy plasma
-        /// </summary>
-        /// <param name="num_Plasma"></param>
-        /// <param name="num_Jig"></param>
-        /// <returns></returns>
-        //public static bool RefreshCheckBuferPlasma(in int num_Plasma , out int[,] num_Jig)
-        //{
-
-        //    //using (SQLiteConnection con = new SQLiteConnection("Data Source = " + Application.StartupPath + "\\Plasma\\DB_ConfigDevice.db;Version=3;"))
-        //    //{
-        //    //    using (SQLiteCommand cmd = new SQLiteCommand())
-        //    //    {
-        //    //        con.Open();
-        //    //        cmd.Connection = con;
-        //    //        for (int i = 1; i <= num_Plasma; i++)
-        //    //        {
-        //    //            cmd.CommandText = $"SELECT * FROM Plasma WHERE ID_Plasma = {i}";
-        //    //            using (SQLiteDataReader dataReader = cmd.ExecuteReader())
-        //    //            {
-        //    //                if (dataReader.HasRows)
-        //    //                {
-        //    //                    while (dataReader.Read())
-        //    //                    {
-        //    //                        num_Jig[i] dataReader.StepCount;
-        //    //                        //ID_Plasma = dataReader.GetInt32(0).ToString();
-        //    //                        //TagBase = dataReader.GetString(1);
-        //    //                        //TagCover = dataReader.GetString(2);
-        //    //                        //TagJig = dataReader.GetString(3);
-        //    //                        //DateTime = dataReader.GetString(4);
-        //    //                        //Step_Plasma = 10;// Next Step
-        //    //                    }
-        //    //                }
-        //    //            }
-        //    //        }
-
-        //    //        con.Close();
-        //    //    }
-        //    //}
-        //    //return dataReader;
-        //}
+       
         #endregion
 
         #region Function execute DB with LinkPathServer
@@ -648,7 +672,7 @@ namespace LineGolden_PLasma
             try
             {
                 string check = connectDb.Trim().Substring(0, 2);
-                if (connectDb.Contains("\\"))
+                if (check.Contains("\\"))
                 {
                     connectDb = "\\" + connectDb;
                 }
@@ -673,6 +697,7 @@ namespace LineGolden_PLasma
                     }
                     catch (Exception ex)
                     {
+                        Lib.ShowError(ex.ToString());
                         return 0;
                         throw;
                     }
@@ -685,6 +710,7 @@ namespace LineGolden_PLasma
             }
             catch (Exception ex)
             {
+                Lib.ShowError(ex.ToString());
                 return 0;
             }
         }

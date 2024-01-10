@@ -16,7 +16,6 @@ using MC_Protocol_NTT;
 using ActUtlTypeLib;
 using System.Diagnostics;
 using System.IO;
-using WaitWnd;
 
 namespace LineGolden_PLasma
 {
